@@ -1,0 +1,19 @@
+Ciao. Vorrei creare un'app ombile per android compatibile con Android16
+Questa applicazione deve essere in grado di intercettare le chiamate in entrata e se ricadono all'interno di una blacklist dare la possibilità all'utente di bloccarla, silenziarla o farla passare.
+L'utente deve avere la possibilità di creare la sua playlist personale utilizzando il registro delle chiamate.
+
+La blacklist può essere composta da numeri "interi" o "radici" di numeri. Ad esempio +3933312345678 che è un numero intero verrà bloccato. Se invece il numero in blacklist è +393331234 tutti i numeri che avranno questo come radice verranno 
+bloccati, quindi un numero così +3933312340000 o così +3933312349999 deve essere bloccato se nella lista c'è +393331234. Praticamente funziona da wildcard
+
+La blacklist deve essere esportabile ed importabile da txt o csv tramite una funzione dedicata
+
+La UI dell'app deve essere moderna ed di facile uso per l'utente, deve avere un menù ad hamburger in alto a destra dove all'interno ci dovranno essere 4 voci:
+- Impostazioni
+- Importa CSV o TXT
+- Esporta CSV o TXT
+- Info
+
+Per fare ciò pianifica un'attività con piccoli task logici da eseguire uno ad uno.
+Per ogni task:
+- controlla che ci sia la piena funzionalità dell'applicazione
+- Dove possibile crea unit e system test

@@ -1,0 +1,36 @@
+R_DEF: Internal format may change without notice
+local
+color background
+color ic_launcher_background
+color text_primary
+mipmap ic_launcher
+mipmap ic_launcher_foreground
+mipmap ic_launcher_round
+string about
+string action
+string add_entry
+string allow
+string app_name
+string app_version
+string battery_optimization_warning
+string block
+string cancel
+string delete
+string empty_list
+string exact_match
+string export_csv_txt
+string import_csv_txt
+string info
+string label
+string manage_battery_optimization
+string pattern
+string permission_read_call_log
+string permission_read_call_log_desc
+string prefix_match
+string protection_active
+string protection_inactive
+string save
+string set_as_screening_app
+string settings
+string silence
+style Theme.CallsBlocker

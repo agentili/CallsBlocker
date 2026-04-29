@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.callsblocker.util.PrefsManagerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-04-29T22:59:45" hostname="DESKTOP-ALE" time="0.215">
+  <properties/>
+  <testcase name="setOnboardingCompleted_savesValue" classname="com.callsblocker.util.PrefsManagerTest" time="0.063"/>
+  <testcase name="setNotificationsEnabled_savesValue" classname="com.callsblocker.util.PrefsManagerTest" time="0.044"/>
+  <testcase name="notificationsEnabled_defaultTrue" classname="com.callsblocker.util.PrefsManagerTest" time="0.036"/>
+  <testcase name="onboardingCompleted_defaultFalse" classname="com.callsblocker.util.PrefsManagerTest" time="0.031"/>
+  <testcase name="multiplePrefs_independent" classname="com.callsblocker.util.PrefsManagerTest" time="0.041"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

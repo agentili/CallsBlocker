@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.callsblocker.util.AppRoleManagerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-04-29T22:59:52" hostname="DESKTOP-ALE" time="0.062">
+  <properties/>
+  <testcase name="isScreeningRoleGranted_defaultFalse_doesNotThrow" classname="com.callsblocker.util.AppRoleManagerTest" time="0.031"/>
+  <testcase name="callScreeningRoleConstant_isCallScreening_notDefault" classname="com.callsblocker.util.AppRoleManagerTest" time="0.031"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

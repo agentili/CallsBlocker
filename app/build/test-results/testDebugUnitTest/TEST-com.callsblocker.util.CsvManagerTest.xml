@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.callsblocker.util.CsvManagerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-04-29T22:59:45" hostname="DESKTOP-ALE" time="0.012">
+  <properties/>
+  <testcase name="import_withoutHeader" classname="com.callsblocker.util.CsvManagerTest" time="0.004"/>
+  <testcase name="import_roundTrip" classname="com.callsblocker.util.CsvManagerTest" time="0.006"/>
+  <testcase name="import_invalidAction_defaultsToSilence" classname="com.callsblocker.util.CsvManagerTest" time="0.0"/>
+  <testcase name="import_withHeader" classname="com.callsblocker.util.CsvManagerTest" time="0.001"/>
+  <testcase name="export_createsValidCsv" classname="com.callsblocker.util.CsvManagerTest" time="0.0"/>
+  <testcase name="import_caseInsensitiveAction" classname="com.callsblocker.util.CsvManagerTest" time="0.0"/>
+  <testcase name="import_ignoreMalformedLines" classname="com.callsblocker.util.CsvManagerTest" time="0.0"/>
+  <testcase name="import_emptyLines" classname="com.callsblocker.util.CsvManagerTest" time="0.0"/>
+  <testcase name="import_spacesAroundValues" classname="com.callsblocker.util.CsvManagerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.callsblocker.util.NumberNormalizerTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-04-29T22:59:45" hostname="DESKTOP-ALE" time="0.002">
+  <properties/>
+  <testcase name="normalize_convertsItalianPrefix00to39" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_handlesOnlySpecialChars" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_mixedFormats" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_removesParentheses" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_removesLeadingPlus" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_convertsItalianPrefix0039to39" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_handlesEmptyString" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_keeps39Prefix" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_handlesOnlySpaces" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_removesDashes" classname="com.callsblocker.util.NumberNormalizerTest" time="0.0"/>
+  <testcase name="normalize_removesSpaces" classname="com.callsblocker.util.NumberNormalizerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

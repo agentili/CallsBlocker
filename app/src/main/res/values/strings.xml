@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CallsBlocker</string>
+    <string name="protection_active">✓ Protezione attiva</string>
+    <string name="protection_inactive">⚠ Protezione non attiva — Tocca per configurare</string>
+    <string name="battery_optimization_warning">⚠ Battery optimization attiva — potrebbe bloccare il servizio</string>
+    <string name="settings">Impostazioni</string>
+    <string name="import_csv_txt">Importa CSV o TXT</string>
+    <string name="export_csv_txt">Esporta CSV o TXT</string>
+    <string name="info">Info</string>
+    <string name="add_entry">Aggiungi voce</string>
+    <string name="pattern">Numero (es. +393331234)</string>
+    <string name="exact_match">Numero esatto</string>
+    <string name="prefix_match">Prefisso (wildcard)</string>
+    <string name="label">Etichetta (opzionale)</string>
+    <string name="block">Blocca</string>
+    <string name="silence">Silenzia</string>
+    <string name="allow">Consenti</string>
+    <string name="action">Azione</string>
+    <string name="cancel">Annulla</string>
+    <string name="save">Salva</string>
+    <string name="delete">Elimina</string>
+    <string name="empty_list">Nessuna voce in blacklist. Aggiungi una voce per iniziare.</string>
+    <string name="app_version">Versione</string>
+    <string name="about">CallsBlocker — App per bloccare chiamate spam</string>
+    <string name="set_as_screening_app">Imposta come app di screening</string>
+    <string name="manage_battery_optimization">Gestisci battery optimization</string>
+    <string name="permission_read_call_log">Accesso al registro chiamate</string>
+    <string name="permission_read_call_log_desc">Permettere l\'accesso al registro delle chiamate per aggiungere numeri dalla cronologia</string>
+</resources>

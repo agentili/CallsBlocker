@@ -59,7 +59,6 @@ fun SettingsScreen(
     val isBatteryOptimized = uiState.isBatteryOptimized
 
     val notificationsEnabled by prefsManager.notificationsEnabled.collectAsState(initial = true)
-    var notificationsChecked by remember { mutableStateOf(notificationsEnabled) }
 
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -184,9 +183,8 @@ fun SettingsScreen(
                     modifier = Modifier.weight(1f)
                 )
                 Switch(
-                    checked = notificationsChecked,
+                    checked = notificationsEnabled,
                     onCheckedChange = { newValue ->
-                        notificationsChecked = newValue
                         scope.launch {
                             prefsManager.setNotificationsEnabled(newValue)
                         }

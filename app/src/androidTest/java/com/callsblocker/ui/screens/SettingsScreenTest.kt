@@ -122,4 +122,13 @@ class SettingsScreenTest {
         composeTestRule.onNodeWithText("Protezione disattivata").assertDoesNotExist()
         composeTestRule.onNodeWithText("Ottimizzazione batteria attiva").assertDoesNotExist()
     }
+
+    @Test
+    fun settingsScreen_notificationsSwitch_isPresent() {
+        val viewModel = mockViewModel(isActive = true, isOptimized = false)
+        setScreen(viewModel)
+        // Verify that the notifications switch is displayed
+        composeTestRule.onNodeWithText("Notifica quando una chiamata viene bloccata")
+            .assertIsDisplayed()
+    }
 }

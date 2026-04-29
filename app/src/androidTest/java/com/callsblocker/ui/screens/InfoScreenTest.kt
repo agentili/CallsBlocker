@@ -2,6 +2,7 @@ package com.callsblocker.ui.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.callsblocker.ui.theme.CallsBlockerTheme
@@ -103,5 +104,17 @@ class InfoScreenTest {
         }
 
         composeTestRule.onNodeWithText("Copyright").assertIsDisplayed()
+    }
+
+    @Test
+    fun infoScreen_hasBackButton() {
+        composeTestRule.setContent {
+            CallsBlockerTheme {
+                val navController = rememberNavController()
+                InfoScreen(navController = navController)
+            }
+        }
+
+        composeTestRule.onNodeWithContentDescription("Indietro").assertIsDisplayed()
     }
 }

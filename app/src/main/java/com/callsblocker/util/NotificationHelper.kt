@@ -44,7 +44,7 @@ class NotificationHelper @Inject constructor(
         val text = if (!label.isNullOrEmpty()) "Identificato come: $label" else "Numero presente in blacklist"
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.sym_def_app_icon) // Using system icon for now
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_LOW)

@@ -120,4 +120,48 @@ Launcher icons are located in `app/src/main/res/mipmap-anydpi-v26/` (adaptive ic
   - `NavigationTest` — navigation flow between screens
   - `HomeScreenTest`, `HomeScreenAddEntryTest`, `SettingsScreenTest`, `InfoScreenTest` — individual screen UI verification
   - `MainActivityUiTest`, `OnboardingActivityTest` — activity lifecycle and integration
+  - `EntryBottomSheetTest` — ModalBottomSheet with sticky buttons, input validation, and callbacks
   - Utility tests: `NumberNormalizerTest`, `NumberMatcherTest`, `CsvManagerTest`, `PrefsManagerTest`, `AppRoleManagerTest`
+
+## Compose UI Patterns
+
+### ModalBottomSheet with Sticky Buttons
+
+When building a `ModalBottomSheet` with scrollable input fields and sticky action buttons, use this structure to ensure buttons remain visible:
+
+```kotlin
+ModalBottomSheet(...) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        // Scrollable content
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(scrollState)
+                .padding(horizontal = 24.dp)
+                .imePadding()  // Applied to scrollable section only
+        ) {
+            // Input fields, text, switches, etc.
+        }
+
+        // Sticky buttons at bottom (always visible)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 16.dp)
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OutlinedButton(modifier = Modifier.weight(1f)) { ... }
+            Button(modifier = Modifier.weight(1f)) { ... }
+        }
+    }
+}
+```
+
+**Key points:**
+- Use `.weight(1f)` on the scrollable `Column` to push buttons to the bottom
+- Apply `imePadding()` to the scrollable section, not the outer `Column`
+- `Spacer(height = 24.dp)` at the end of scrollable content provides breathing room above buttons
+- Buttons use consistent padding matching the scrollable content (`horizontal = 24.dp`)

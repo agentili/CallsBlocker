@@ -9,10 +9,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,12 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -111,7 +114,8 @@ private fun OnboardingContent(
                 2 -> Step2ReadCallLog(viewModel = viewModel, permissionLauncher = permissionLauncher)
                 3 -> Step3ScreeningRole(viewModel = viewModel, roleManager = roleManager, roleLauncher = roleLauncher)
                 4 -> Step4BatteryOptimization(viewModel = viewModel, batteryManager = batteryManager, batteryLauncher = batteryLauncher)
-                5 -> Step5Completed(viewModel = viewModel)
+                5 -> Step5Features(viewModel = viewModel)
+                6 -> Step6Completed(viewModel = viewModel)
             }
         }
     }
@@ -268,7 +272,79 @@ private fun Step4BatteryOptimization(
 }
 
 @Composable
-private fun Step5Completed(viewModel: OnboardingViewModel) {
+private fun Step5Features(viewModel: OnboardingViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+    ) {
+        Text(
+            text = "Funzionalità Principali",
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        
+        FeatureItem(
+            title = "Aggiunta Rapida",
+            description = "Aggiungi numeri manualmente, importali dal registro chiamate o carica un file CSV."
+        )
+        
+        FeatureItem(
+            title = "Azioni Interattive",
+            description = "Clicca sul pulsante dell'azione (Blocca/Silenzia/Consenti) direttamente nella lista per cambiarla velocemente."
+        )
+        
+        FeatureItem(
+            title = "Ricerca Intelligente",
+            description = "Usa la barra di ricerca in alto per filtrare istantaneamente i numeri nella tua blacklist o nei log."
+        )
+        
+        FeatureItem(
+            title = "Protezione sicura",
+            description = "Conferma sempre l'eliminazione dei numeri per evitare cancellazioni accidentali."
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        Button(
+            onClick = { viewModel.nextStep() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Ho capito")
+        }
+    }
+}
+
+@Composable
+private fun FeatureItem(title: String, description: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        )
+    }
+}
+
+@Composable
+private fun Step6Completed(viewModel: OnboardingViewModel) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,

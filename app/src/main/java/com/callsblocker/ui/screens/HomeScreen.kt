@@ -20,7 +20,9 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -44,11 +47,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import com.callsblocker.R
 import com.callsblocker.data.BlockedEntry
 import com.callsblocker.ui.MainViewModel
 import com.callsblocker.ui.components.BlockedEntryItem
@@ -68,6 +73,7 @@ fun HomeScreen(
     var entryToEdit by remember { mutableStateOf<BlockedEntry?>(null) }
     var searchQuery by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
+    var entryToDelete by remember { mutableStateOf<BlockedEntry?>(null) }
 
     val filteredEntries = remember(uiState.entries, searchQuery) {
         if (searchQuery.isEmpty()) {
@@ -264,7 +270,7 @@ fun HomeScreen(
                     items(filteredEntries) { entry ->
                         BlockedEntryItem(
                             entry = entry,
-                            onDelete = { viewModel.deleteEntry(it) },
+                            onDelete = { entryToDelete = entry },
                             onEdit = { 
                                 entryToEdit = it
                                 showEntrySheet = true
@@ -295,5 +301,31 @@ fun HomeScreen(
                 }
             }
         )
+
+        if (entryToDelete != null) {
+            AlertDialog(
+                onDismissRequest = { entryToDelete = null },
+                title = { Text(stringResource(R.string.delete_confirmation_title)) },
+                text = { Text(stringResource(R.string.delete_confirmation_message)) },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            entryToDelete?.let { viewModel.deleteEntry(it.id) }
+                            entryToDelete = null
+                        },
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text(stringResource(R.string.delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { entryToDelete = null }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            )
+        }
     }
 }

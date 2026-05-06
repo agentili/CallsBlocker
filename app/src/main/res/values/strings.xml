@@ -27,4 +27,8 @@
     <string name="manage_battery_optimization">Gestisci battery optimization</string>
     <string name="permission_read_call_log">Accesso al registro chiamate</string>
     <string name="permission_read_call_log_desc">Permettere l\'accesso al registro delle chiamate per aggiungere numeri dalla cronologia</string>
+    <string name="permission_denied_log">Accesso al registro chiamate negato</string>
+    <string name="request_permission">Richiedi permesso</string>
+    <string name="no_call_log">Nessun registro chiamate trovato</string>
+    <string name="import_from_log">Importa da registro</string>
 </resources>

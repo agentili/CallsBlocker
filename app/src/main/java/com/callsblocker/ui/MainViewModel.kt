@@ -22,6 +22,7 @@ import javax.inject.Inject
 data class UiState(
     val entries: List<BlockedEntry> = emptyList(),
     val callLogs: List<BlockedCallLog> = emptyList(),
+    val systemCallLogs: List<CallLogEntry> = emptyList(),
     val isScreeningActive: Boolean = false,
     val isBatteryOptimized: Boolean = false,
     val userMessage: String? = null
@@ -119,6 +120,42 @@ class MainViewModel @Inject constructor(
 
     fun clearUserMessage() {
         _uiState.value = _uiState.value.copy(userMessage = null)
+    }
+
+    fun fetchSystemCallLogs() {
+        viewModelScope.launch {
+            val calls = mutableListOf<CallLogEntry>()
+            try {
+                val cursor = context.contentResolver.query(
+                    android.provider.CallLog.Calls.CONTENT_URI,
+                    arrayOf(
+                        android.provider.CallLog.Calls.NUMBER,
+                        android.provider.CallLog.Calls.CACHED_NAME,
+                        android.provider.CallLog.Calls.DURATION,
+                        android.provider.CallLog.Calls.DATE
+                    ),
+                    null,
+                    null,
+                    "${android.provider.CallLog.Calls.DATE} DESC LIMIT 50"
+                )
+
+                cursor?.use {
+                    while (it.moveToNext()) {
+                        val number = it.getString(0)
+                        val name = it.getString(1)
+                        val duration = it.getLong(2)
+                        val date = it.getLong(3)
+
+                        if (number != null) {
+                            calls.add(CallLogEntry(number, name, duration, date))
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            _uiState.value = _uiState.value.copy(systemCallLogs = calls)
+        }
     }
 
     fun updateEntry(entry: BlockedEntry) {

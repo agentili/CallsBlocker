@@ -189,7 +189,15 @@ fun SettingsScreen(
                         scope.launch {
                             prefsManager.setNotificationsEnabled(newValue)
                         }
-                    }
+                    },
+                    colors = androidx.compose.material3.SwitchDefaults.colors(
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                        checkedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                        uncheckedBorderColor = MaterialTheme.colorScheme.outline
+                    )
                 )
             }
 

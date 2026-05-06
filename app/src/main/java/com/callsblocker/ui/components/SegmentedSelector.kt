@@ -45,7 +45,7 @@ fun SegmentedSelector(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .background(if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else Color.Transparent)
+                    .background(if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent)
                     .clickable { onOptionSelected(option) },
                 contentAlignment = Alignment.Center
             ) {
@@ -55,7 +55,7 @@ fun SegmentedSelector(
                             imageVector = Icons.Default.Check,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                     }
@@ -63,7 +63,7 @@ fun SegmentedSelector(
                         text = option,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

@@ -25,12 +25,14 @@ data class UiState(
     val systemCallLogs: List<CallLogEntry> = emptyList(),
     val isScreeningActive: Boolean = false,
     val isBatteryOptimized: Boolean = false,
-    val userMessage: String? = null
+    val userMessage: String? = null,
+    val appTheme: String = "system"
 )
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: BlockedEntryRepository,
+    private val prefsManager: com.callsblocker.util.PrefsManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -40,6 +42,7 @@ class MainViewModel @Inject constructor(
     init {
         observeEntries()
         observeLogs()
+        observeTheme()
         updateScreeningStatus()
     }
 
@@ -55,6 +58,14 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getAllLogs().collect { logs ->
                 _uiState.value = _uiState.value.copy(callLogs = logs)
+            }
+        }
+    }
+
+    private fun observeTheme() {
+        viewModelScope.launch {
+            prefsManager.appTheme.collect { theme ->
+                _uiState.value = _uiState.value.copy(appTheme = theme)
             }
         }
     }
@@ -161,6 +172,12 @@ class MainViewModel @Inject constructor(
     fun updateEntry(entry: BlockedEntry) {
         viewModelScope.launch {
             repository.update(entry)
+        }
+    }
+
+    fun setAppTheme(theme: String) {
+        viewModelScope.launch {
+            prefsManager.setAppTheme(theme)
         }
     }
 

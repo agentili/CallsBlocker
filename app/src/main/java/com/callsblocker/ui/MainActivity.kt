@@ -53,21 +53,22 @@ class MainActivity : ComponentActivity() {
 
     private fun setMainContent() {
         setContent {
-            CallsBlockerTheme {
+            val viewModel = hiltViewModel<MainViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            
+            CallsBlockerTheme(theme = uiState.appTheme) {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
                     startDestination = "home"
                 ) {
                     composable("home") {
-                        val viewModel = hiltViewModel<MainViewModel>()
                         HomeScreen(
                             viewModel = viewModel,
                             navController = navController
                         )
                     }
                     composable("settings") {
-                        val viewModel = hiltViewModel<MainViewModel>()
                         SettingsScreen(
                             navController = navController,
                             viewModel = viewModel,
@@ -79,7 +80,6 @@ class MainActivity : ComponentActivity() {
                         InfoScreen(navController = navController)
                     }
                     composable("logs") {
-                        val viewModel = hiltViewModel<MainViewModel>()
                         BlockedCallsScreen(
                             viewModel = viewModel,
                             navController = navController

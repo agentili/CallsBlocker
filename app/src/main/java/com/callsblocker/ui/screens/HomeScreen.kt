@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
@@ -48,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -160,7 +163,7 @@ fun HomeScreen(
                             isSearching = false
                             searchQuery = ""
                         }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Chiudi ricerca")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Chiudi ricerca")
                         }
                     }
                 },
@@ -228,7 +231,8 @@ fun HomeScreen(
                     entryToEdit = null
                     showEntrySheet = true
                 },
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 4.dp) // Adjust padding to sit just above bottom bar
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Aggiungi")
             }

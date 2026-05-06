@@ -1,0 +1,41 @@
+# Build artifacts
+build/
+.gradle/
+Captures/
+*.apk
+*.aar
+*.ap_
+*.dex
+*.class
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+local.properties
+.navigation/
+
+# Gradle
+gradlew
+gradlew.bat
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
+
+# Kotlin
+.kotlin/
+*.kotlin_module
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# NDK
+.externalNativeBuild/
+.cxx/
+
+# Google Services
+google-services.json
+
+# Logs
+*.log

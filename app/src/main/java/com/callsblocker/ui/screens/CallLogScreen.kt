@@ -1,7 +1,11 @@
 package com.callsblocker.ui.screens
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -12,12 +16,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -99,7 +99,10 @@ fun CallLogScreen(viewModel: MainViewModel) {
                             )
                         )
                     } else {
-                        Text(stringResource(R.string.permission_read_call_log))
+                        Text(
+                            "Registro Chiamate",
+                            style = MaterialTheme.typography.titleMedium
+                        )
                     }
                 },
                 navigationIcon = {
@@ -152,29 +155,30 @@ fun CallLogScreen(viewModel: MainViewModel) {
                     }
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(filteredLogs) { log ->
-                        CallLogItem(
-                            log = log,
-                            onImport = {
-                                viewModel.addEntry(
-                                    BlockedEntry(
-                                        pattern = log.phoneNumber,
-                                        isPrefix = false,
-                                        label = log.displayName ?: "",
-                                        action = CallAction.BLOCK
+                        items(filteredLogs) { log ->
+                            CallLogItem(
+                                log = log,
+                                onImport = {
+                                    viewModel.addEntry(
+                                        BlockedEntry(
+                                            pattern = log.phoneNumber,
+                                            isPrefix = false,
+                                            label = log.displayName ?: "",
+                                            action = CallAction.BLOCK
+                                        )
                                     )
-                                )
-                            },
-                            onCopy = {
-                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                val clip = ClipData.newPlainText("Phone Number", log.phoneNumber)
-                                clipboard.setPrimaryClip(clip)
-                                Toast.makeText(context, "Numero copiato", Toast.LENGTH_SHORT).show()
-                            }
-                        )
-                        HorizontalDivider()
+                                    Toast.makeText(context, "Numero aggiunto alla blacklist", Toast.LENGTH_SHORT).show()
+                                },
+                                onCopy = {
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("Phone Number", log.phoneNumber)
+                                    clipboard.setPrimaryClip(clip)
+                                    Toast.makeText(context, "Numero copiato", Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                            HorizontalDivider()
+                        }
                     }
-                }
                 }
             }
         }

@@ -1,2 +1,0 @@
--keep,allowobfuscation,allowshrinking class com.callsblocker.ui.MainViewModel
--keep,allowobfuscation,allowshrinking class com.callsblocker.ui.MainViewModel

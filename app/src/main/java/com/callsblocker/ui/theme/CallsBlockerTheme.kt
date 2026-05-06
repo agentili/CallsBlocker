@@ -17,18 +17,18 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
-    primary = Color(0xFF6200EE),
-    secondary = Color(0xFF03DAC6),
-    tertiary = Color(0xFF03DAC6),
+    primary = Color(0xFF2E7D32), // Forest Green
+    secondary = Color(0xFF4CAF50), // Material Green
+    tertiary = Color(0xFF81C784),
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
     error = Color(0xFFB3261E)
 )
 
 private val DarkColors = darkColorScheme(
-    primary = Color(0xFFBB86FC),
-    secondary = Color(0xFF03DAC6),
-    tertiary = Color(0xFF03DAC6),
+    primary = Color(0xFF81C784), // Light Green
+    secondary = Color(0xFF4CAF50),
+    tertiary = Color(0xFF2E7D32),
     background = Color(0xFF121212),
     surface = Color(0xFF121212),
     error = Color(0xFFF2B8B5)

@@ -13,6 +13,11 @@ import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -147,8 +152,10 @@ fun CallLogScreen(viewModel: MainViewModel) {
                     }
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        items(filteredLogs) { log ->
-                            CallLogItem(log) {
+                    items(filteredLogs) { log ->
+                        CallLogItem(
+                            log = log,
+                            onImport = {
                                 viewModel.addEntry(
                                     BlockedEntry(
                                         pattern = log.phoneNumber,
@@ -157,10 +164,17 @@ fun CallLogScreen(viewModel: MainViewModel) {
                                         action = CallAction.BLOCK
                                     )
                                 )
+                            },
+                            onCopy = {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                val clip = ClipData.newPlainText("Phone Number", log.phoneNumber)
+                                clipboard.setPrimaryClip(clip)
+                                Toast.makeText(context, "Numero copiato", Toast.LENGTH_SHORT).show()
                             }
-                            HorizontalDivider()
-                        }
+                        )
+                        HorizontalDivider()
                     }
+                }
                 }
             }
         }
@@ -168,7 +182,11 @@ fun CallLogScreen(viewModel: MainViewModel) {
 }
 
 @Composable
-fun CallLogItem(log: CallLogEntry, onImport: () -> Unit) {
+fun CallLogItem(
+    log: CallLogEntry,
+    onImport: () -> Unit,
+    onCopy: () -> Unit
+) {
     val sdf = remember { SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault()) }
     
     ListItem(
@@ -192,12 +210,21 @@ fun CallLogItem(log: CallLogEntry, onImport: () -> Unit) {
             )
         },
         trailingContent = {
-            IconButton(onClick = onImport) {
-                Icon(
-                    imageVector = Icons.Default.Block,
-                    contentDescription = stringResource(R.string.import_from_log),
-                    tint = MaterialTheme.colorScheme.error
-                )
+            Row {
+                IconButton(onClick = onCopy) {
+                    Icon(
+                        imageVector = Icons.Default.ContentCopy,
+                        contentDescription = "Copia numero",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                IconButton(onClick = onImport) {
+                    Icon(
+                        imageVector = Icons.Default.Block,
+                        contentDescription = stringResource(R.string.import_from_log),
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
     )

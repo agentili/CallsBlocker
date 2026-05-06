@@ -5,12 +5,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -21,8 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -35,12 +30,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.callsblocker.ui.components.StatusBanner
 import com.callsblocker.util.AppRoleManager
@@ -51,39 +42,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import com.callsblocker.ui.MainViewModel
-
-@Composable
-private fun ThemeOptionChip(
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val chipColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-    
-    SuggestionChip(
-        onClick = onClick,
-        modifier = modifier.height(36.dp),
-        label = {
-            Text(
-                text = label.uppercase(),
-                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp),
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        },
-        colors = SuggestionChipDefaults.suggestionChipColors(
-            containerColor = if (isSelected) chipColor.copy(alpha = 0.15f) else Color.Transparent,
-            labelColor = chipColor
-        ),
-        border = SuggestionChipDefaults.suggestionChipBorder(
-            enabled = true,
-            borderColor = chipColor.copy(alpha = 0.5f),
-            borderWidth = if (isSelected) 2.dp else 1.dp
-        )
-    )
-}
+import com.callsblocker.ui.components.SegmentedSelector
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -241,31 +200,26 @@ fun SettingsScreen(
                 modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
-            ) {
-                ThemeOptionChip(
-                    label = "Sistema",
-                    isSelected = uiState.appTheme == "system",
-                    onClick = { viewModel.setAppTheme("system") },
-                    modifier = Modifier.weight(1f)
-                )
-                ThemeOptionChip(
-                    label = "Chiaro",
-                    isSelected = uiState.appTheme == "light",
-                    onClick = { viewModel.setAppTheme("light") },
-                    modifier = Modifier.weight(1f)
-                )
-                ThemeOptionChip(
-                    label = "Scuro",
-                    isSelected = uiState.appTheme == "dark",
-                    onClick = { viewModel.setAppTheme("dark") },
-                    modifier = Modifier.weight(1f)
-                )
+            val themeOptions = listOf("Sistema", "Chiaro", "Scuro")
+            val currentThemeLabel = when (uiState.appTheme) {
+                "light" -> "Chiaro"
+                "dark" -> "Scuro"
+                else -> "Sistema"
             }
+
+            SegmentedSelector(
+                options = themeOptions,
+                selectedOption = currentThemeLabel,
+                onOptionSelected = { label ->
+                    val themeValue = when (label) {
+                        "Chiaro" -> "light"
+                        "Scuro" -> "dark"
+                        else -> "system"
+                    }
+                    viewModel.setAppTheme(themeValue)
+                },
+                modifier = Modifier.padding(16.dp)
+            )
 
             // Data Management Section
             Text(

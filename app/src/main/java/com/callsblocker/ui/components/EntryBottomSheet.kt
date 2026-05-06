@@ -70,115 +70,125 @@ fun EntryBottomSheet(
             tonalElevation = 8.dp
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(scrollState)
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 32.dp)
-                    .imePadding()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = if (entryToEdit == null) "Nuova voce blacklist" else "Modifica voce",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-
-                // Pattern field
-                OutlinedTextField(
-                    value = pattern,
-                    onValueChange = { newValue ->
-                        pattern = newValue
-                        patternError = validatePattern(newValue)
-                    },
-                    label = { Text("Numero o prefisso") },
-                    placeholder = { Text("es. +39333123456") },
-                    isError = patternError.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium
-                )
-                if (patternError.isNotEmpty()) {
+                // Scrollable content with input fields
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 24.dp)
+                        .padding(top = 16.dp)
+                        .imePadding()
+                ) {
                     Text(
-                        text = patternError,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+                        text = if (entryToEdit == null) "Nuova voce blacklist" else "Modifica voce",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(bottom = 24.dp)
                     )
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Prefix switch
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
+                    // Pattern field
+                    OutlinedTextField(
+                        value = pattern,
+                        onValueChange = { newValue ->
+                            pattern = newValue
+                            patternError = validatePattern(newValue)
+                        },
+                        label = { Text("Numero o prefisso") },
+                        placeholder = { Text("es. +39333123456") },
+                        isError = patternError.isNotEmpty(),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    if (patternError.isNotEmpty()) {
                         Text(
-                            text = "Tratta come prefisso",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = "Blocca tutti i numeri che iniziano così",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = patternError,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(top = 4.dp, start = 4.dp)
                         )
                     }
-                    Switch(
-                        checked = isPrefix,
-                        onCheckedChange = { isPrefix = it }
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                // Action selection
-                Text(
-                    text = "Azione da intraprendere",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val actions = CallAction.values()
-                    actions.forEachIndexed { index, action ->
-                        SegmentedButton(
-                            selected = selectedAction == action,
-                            onClick = { selectedAction = action },
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = actions.size
-                            ),
-                            label = {
-                                Text(
-                                    when (action) {
-                                        CallAction.BLOCK -> "Blocca"
-                                        CallAction.SILENCE -> "Silenzia"
-                                        CallAction.ALLOW -> "Consenti"
-                                    }
-                                )
-                            }
+                    // Prefix switch
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Tratta come prefisso",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = "Blocca tutti i numeri che iniziano così",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = isPrefix,
+                            onCheckedChange = { isPrefix = it }
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Action selection
+                    Text(
+                        text = "Azione da intraprendere",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    SingleChoiceSegmentedButtonRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val actions = CallAction.values()
+                        actions.forEachIndexed { index, action ->
+                            SegmentedButton(
+                                selected = selectedAction == action,
+                                onClick = { selectedAction = action },
+                                shape = SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = actions.size
+                                ),
+                                label = {
+                                    Text(
+                                        when (action) {
+                                            CallAction.BLOCK -> "Blocca"
+                                            CallAction.SILENCE -> "Silenzia"
+                                            CallAction.ALLOW -> "Consenti"
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Label field (optional)
+                    OutlinedTextField(
+                        value = label,
+                        onValueChange = { label = it },
+                        label = { Text("Nome o Etichetta (opzionale)") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Label field (optional)
-                OutlinedTextField(
-                    value = label,
-                    onValueChange = { label = it },
-                    label = { Text("Nome o Etichetta (opzionale)") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Buttons
+                // Sticky buttons at bottom (always visible)
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 16.dp)
+                        .padding(top = 8.dp),
                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
                 ) {
                     OutlinedButton(

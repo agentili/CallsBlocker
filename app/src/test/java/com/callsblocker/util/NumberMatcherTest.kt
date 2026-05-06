@@ -200,4 +200,25 @@ class NumberMatcherTest {
         // Should match with +
         assertTrue("Should match prefix with +", NumberMatcher.matches("+393331234999", entry))
     }
+
+    @Test
+    fun matches_crossPrefixConditionBranch() {
+        val entry = BlockedEntry(
+            pattern = "333123456",
+            isPrefix = false,
+            label = "Test",
+            action = CallAction.BLOCK
+        )
+        // incoming starts with 39, pattern doesn't
+        assertTrue(NumberMatcher.matches("39333123456", entry))
+        
+        val entry2 = BlockedEntry(
+            pattern = "39333123456",
+            isPrefix = false,
+            label = "Test",
+            action = CallAction.BLOCK
+        )
+        // pattern starts with 39, incoming doesn't
+        assertTrue(NumberMatcher.matches("333123456", entry2))
+    }
 }

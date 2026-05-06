@@ -171,5 +171,27 @@ class CsvManagerTest {
         assertEquals("+39333", entries[0].pattern)
         assertEquals("Spam", entries[0].label)
     }
-}
 
+    @Test
+    fun import_differentDelimiters() {
+        val csv = "pattern;isPrefix;label;action\n333123;true;Semi;BLOCK\n333222\tfalse\tTab\tSILENCE"
+        val input = ByteArrayInputStream(csv.toByteArray(Charsets.UTF_8))
+        val entries = CsvManager.import(input)
+
+        assertEquals(2, entries.size)
+        assertEquals("333123", entries[0].pattern)
+        assertEquals("Semi", entries[0].label)
+        assertEquals("333222", entries[1].pattern)
+        assertEquals("Tab", entries[1].label)
+    }
+
+    @Test
+    fun import_invalidPattern_skipped() {
+        val csv = "pattern,isPrefix,label,action\nno digits,true,Label,BLOCK\n123,false,Valid,SILENCE"
+        val input = ByteArrayInputStream(csv.toByteArray(Charsets.UTF_8))
+        val entries = CsvManager.import(input)
+
+        assertEquals(1, entries.size)
+        assertEquals("123", entries[0].pattern)
+    }
+}

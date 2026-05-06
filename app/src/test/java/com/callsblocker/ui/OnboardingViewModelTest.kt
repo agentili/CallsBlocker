@@ -65,8 +65,8 @@ class OnboardingViewModelTest {
     }
 
     @Test
-    fun nextStep_from5_completes() = runTest {
-        viewModel.skipToStep(5)
+    fun nextStep_from6_completes() = runTest {
+        viewModel.skipToStep(6)
         viewModel.nextStep()
         val state = viewModel.uiState.value
         assertEquals(true, state.isCompleted)
@@ -95,9 +95,6 @@ class OnboardingViewModelTest {
 
     /**
      * Regression test: completeOnboarding() MUST persist the flag in PrefsManager.
-     * Bug history: Step5Completed used to call onCompleted() directly, never invoking
-     * completeOnboarding(), which caused an infinite onboarding loop because
-     * MainActivity always read onboardingCompleted=false.
      */
     @Test
     fun completeOnboarding_persistsFlagToPrefsManager() = runTest {
@@ -106,8 +103,7 @@ class OnboardingViewModelTest {
     }
 
     /**
-     * Regression test: integration with real PrefsManager — verify the flag is
-     * actually written to DataStore when completeOnboarding() is called.
+     * Regression test: integration with real PrefsManager
      */
     @Test
     fun completeOnboarding_realPrefsManager_writesToDataStore() = runTest {

@@ -6,6 +6,7 @@ import com.callsblocker.data.BlockedCallLog
 import com.callsblocker.data.BlockedEntry
 import com.callsblocker.data.BlockedEntryRepository
 import com.callsblocker.data.CallAction
+import com.callsblocker.util.PrefsManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -37,6 +38,9 @@ class MainViewModelUpdateTest {
     @Mock
     private lateinit var repository: BlockedEntryRepository
 
+    @Mock
+    private lateinit var prefsManager: PrefsManager
+
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
@@ -45,8 +49,9 @@ class MainViewModelUpdateTest {
 
         doReturn(flowOf(emptyList<BlockedEntry>())).`when`(repository).getAll()
         doReturn(flowOf(emptyList<BlockedCallLog>())).`when`(repository).getAllLogs()
+        doReturn(flowOf("system")).`when`(prefsManager).appTheme
         
-        viewModel = MainViewModel(repository, context)
+        viewModel = MainViewModel(repository, prefsManager, context)
     }
 
     @After
@@ -69,5 +74,12 @@ class MainViewModelUpdateTest {
         advanceUntilIdle()
 
         verify(repository).update(entry)
+    }
+
+    @Test
+    fun setAppTheme_callsPrefsManager() = runTest {
+        viewModel.setAppTheme("dark")
+        advanceUntilIdle()
+        verify(prefsManager).setAppTheme("dark")
     }
 }

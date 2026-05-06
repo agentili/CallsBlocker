@@ -131,4 +131,70 @@ class EntryBottomSheetTest {
         assert(confirmedEntry?.id == 10L)
         assert(confirmedEntry?.pattern == "555123")
     }
+
+    @Test
+    fun entrySheet_buttonsAreAlwaysVisible() {
+        composeTestRule.setContent {
+            CallsBlockerTheme {
+                EntryBottomSheet(
+                    onDismiss = {},
+                    onConfirm = {},
+                    showSheet = true
+                )
+            }
+        }
+
+        // Both buttons should be displayed immediately without any scrolling
+        composeTestRule.onNodeWithText("Annulla").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Aggiungi").assertIsDisplayed()
+    }
+
+    @Test
+    fun entrySheet_buttonsRemainVisibleWithInput() {
+        composeTestRule.setContent {
+            CallsBlockerTheme {
+                EntryBottomSheet(
+                    onDismiss = {},
+                    onConfirm = {},
+                    showSheet = true
+                )
+            }
+        }
+
+        // Input text and verify buttons are still visible
+        composeTestRule.onNodeWithText("Numero o prefisso")
+            .performTextInput("+39333123456")
+        composeTestRule.onNodeWithText("Nome o Etichetta (opzionale)")
+            .performTextInput("Test Label")
+
+        // Buttons must remain visible even with filled input fields
+        composeTestRule.onNodeWithText("Annulla").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Aggiungi").assertIsDisplayed()
+    }
+
+    @Test
+    fun entrySheet_buttonIsClickableAfterInput() {
+        var confirmedEntry: BlockedEntry? = null
+
+        composeTestRule.setContent {
+            CallsBlockerTheme {
+                EntryBottomSheet(
+                    onDismiss = {},
+                    onConfirm = { confirmedEntry = it },
+                    showSheet = true
+                )
+            }
+        }
+
+        // Fill in valid pattern to enable button
+        composeTestRule.onNodeWithText("Numero o prefisso")
+            .performTextInput("+39333123456")
+
+        // Verify the button is clickable
+        composeTestRule.onNodeWithText("Aggiungi").assertIsEnabled()
+        
+        // Perform click and verify callback is invoked
+        composeTestRule.onNodeWithText("Aggiungi").performClick()
+        assert(confirmedEntry != null)
+    }
 }

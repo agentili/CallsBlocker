@@ -4,17 +4,23 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,10 +30,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,17 +42,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
-import com.callsblocker.ui.MainViewModel
 import com.callsblocker.data.BlockedEntry
-import com.callsblocker.ui.CallLogPickerActivity
-import com.callsblocker.ui.components.EntryBottomSheet
+import com.callsblocker.ui.MainViewModel
 import com.callsblocker.ui.components.BlockedEntryItem
+import com.callsblocker.ui.components.EntryBottomSheet
 import com.callsblocker.ui.components.StatusBanner
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +66,19 @@ fun HomeScreen(
     var menuExpanded by remember { mutableStateOf(false) }
     var showEntrySheet by remember { mutableStateOf(false) }
     var entryToEdit by remember { mutableStateOf<BlockedEntry?>(null) }
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearching by remember { mutableStateOf(false) }
+
+    val filteredEntries = remember(uiState.entries, searchQuery) {
+        if (searchQuery.isEmpty()) {
+            uiState.entries
+        } else {
+            uiState.entries.filter { 
+                it.pattern.contains(searchQuery, ignoreCase = true) || 
+                it.label.contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
 
     val importLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
@@ -99,71 +119,109 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("CallsBlocker")
-                        if (uiState.isScreeningActive && !uiState.isBatteryOptimized) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
-                                imageVector = Icons.Filled.CheckCircle,
-                                contentDescription = "Attivo",
-                                tint = androidx.compose.ui.graphics.Color(0xFF4CAF50),
-                                modifier = androidx.compose.ui.Modifier.padding(top = 2.dp)
+                    if (isSearching) {
+                        TextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("Cerca numero o nome...") },
+                            singleLine = true,
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
                             )
+                        )
+                    } else {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("CallsBlocker")
+                            if (uiState.isScreeningActive && !uiState.isBatteryOptimized) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Icon(
+                                    imageVector = Icons.Filled.CheckCircle,
+                                    contentDescription = "Attivo",
+                                    tint = Color(0xFF4CAF50),
+                                    modifier = Modifier.padding(top = 2.dp)
+                                )
+                            }
+                        }
+                    }
+                },
+                navigationIcon = {
+                    if (isSearching) {
+                        IconButton(onClick = { 
+                            isSearching = false
+                            searchQuery = ""
+                        }) {
+                            Icon(Icons.Filled.ArrowBack, contentDescription = "Chiudi ricerca")
                         }
                     }
                 },
                 actions = {
-                    IconButton(onClick = { menuExpanded = true }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = "Menu")
-                    }
-                    DropdownMenu(
-                        expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Chiamate Intercettate") },
-                            onClick = {
-                                menuExpanded = false
-                                navController.navigate("logs")
+                    if (isSearching) {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { searchQuery = "" }) {
+                                Icon(Icons.Filled.Close, contentDescription = "Cancella")
                             }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Impostazioni") },
-                            onClick = {
-                                menuExpanded = false
-                                navController.navigate("settings")
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Importa CSV/TXT") },
-                            onClick = {
-                                menuExpanded = false
-                                importLauncher.launch(arrayOf("text/csv", "text/plain", "*/*"))
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Esporta CSV/TXT") },
-                            onClick = {
-                                menuExpanded = false
-                                exportLauncher.launch("callsblocker_export.csv")
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Info") },
-                            onClick = {
-                                menuExpanded = false
-                                navController.navigate("info")
-                            }
-                        )
+                        }
+                    } else {
+                        IconButton(onClick = { isSearching = true }) {
+                            Icon(Icons.Filled.Search, contentDescription = "Cerca")
+                        }
+                        IconButton(onClick = { menuExpanded = true }) {
+                            Icon(Icons.Filled.MoreVert, contentDescription = "Menu")
+                        }
+                        DropdownMenu(
+                            expanded = menuExpanded,
+                            onDismissRequest = { menuExpanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Chiamate Intercettate") },
+                                onClick = {
+                                    menuExpanded = false
+                                    navController.navigate("logs")
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Impostazioni") },
+                                onClick = {
+                                    menuExpanded = false
+                                    navController.navigate("settings")
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Importa CSV/TXT") },
+                                onClick = {
+                                    menuExpanded = false
+                                    importLauncher.launch(arrayOf("text/csv", "text/plain", "*/*"))
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Esporta CSV/TXT") },
+                                onClick = {
+                                    menuExpanded = false
+                                    exportLauncher.launch("callsblocker_export.csv")
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Info") },
+                                onClick = {
+                                    menuExpanded = false
+                                    navController.navigate("info")
+                                }
+                            )
+                        }
                     }
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { 
+                onClick = {
                     entryToEdit = null
-                    showEntrySheet = true 
+                    showEntrySheet = true
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
@@ -187,7 +245,7 @@ fun HomeScreen(
                     }
                 }
 
-                if (uiState.entries.isEmpty()) {
+                if (filteredEntries.isEmpty()) {
                     item {
                         Box(
                             modifier = Modifier
@@ -196,23 +254,31 @@ fun HomeScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "Nessuna voce nella blacklist",
+                                text = if (searchQuery.isEmpty()) "Nessuna voce nella blacklist" else "Nessun risultato trovato",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
                 } else {
-                    items(uiState.entries) { entry ->
+                    items(filteredEntries) { entry ->
                         BlockedEntryItem(
                             entry = entry,
                             onDelete = { viewModel.deleteEntry(it) },
                             onEdit = { 
                                 entryToEdit = it
                                 showEntrySheet = true
+                            },
+                            onActionChange = { updatedEntry, newAction ->
+                                viewModel.updateEntry(updatedEntry.copy(action = newAction))
                             }
                         )
                     }
+                }
+                
+                // Add extra space at the bottom to ensure content isn't covered by FAB
+                item {
+                    Spacer(modifier = Modifier.height(80.dp))
                 }
             }
         }

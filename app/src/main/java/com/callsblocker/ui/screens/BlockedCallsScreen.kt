@@ -10,7 +10,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,10 +21,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,27 +50,77 @@ fun BlockedCallsScreen(
     navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearching by remember { mutableStateOf(false) }
+
+    val filteredLogs = remember(uiState.callLogs, searchQuery) {
+        if (searchQuery.isEmpty()) {
+            uiState.callLogs
+        } else {
+            uiState.callLogs.filter { 
+                it.number.contains(searchQuery, ignoreCase = true) || 
+                it.label?.contains(searchQuery, ignoreCase = true) == true
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Chiamate Intercettate") },
+                title = {
+                    if (isSearching) {
+                        TextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("Cerca numero o nome...") },
+                            singleLine = true,
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            )
+                        )
+                    } else {
+                        Text("Chiamate Intercettate")
+                    }
+                },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { 
+                        if (isSearching) {
+                            isSearching = false
+                            searchQuery = ""
+                        } else {
+                            navController.popBackStack() 
+                        }
+                    }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Indietro")
                     }
                 },
                 actions = {
-                    if (uiState.callLogs.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.clearCallLogs() }) {
-                            Icon(Icons.Filled.Delete, contentDescription = "Cancella tutto")
+                    if (isSearching) {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { searchQuery = "" }) {
+                                Icon(Icons.Filled.Close, contentDescription = "Cancella")
+                            }
+                        }
+                    } else {
+                        IconButton(onClick = { isSearching = true }) {
+                            Icon(Icons.Filled.Search, contentDescription = "Cerca")
+                        }
+                        if (uiState.callLogs.isNotEmpty()) {
+                            IconButton(onClick = { viewModel.clearCallLogs() }) {
+                                Icon(Icons.Filled.Delete, contentDescription = "Cancella tutto")
+                            }
                         }
                     }
                 }
             )
         }
     ) { paddingValues ->
-        if (uiState.callLogs.isEmpty()) {
+        if (filteredLogs.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -71,7 +128,7 @@ fun BlockedCallsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Nessuna chiamata intercettata",
+                    text = if (searchQuery.isEmpty()) "Nessuna chiamata intercettata" else "Nessun risultato trovato",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -82,7 +139,7 @@ fun BlockedCallsScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                items(uiState.callLogs) { log ->
+                items(filteredLogs) { log ->
                     CallLogItem(log)
                 }
             }

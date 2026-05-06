@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,10 +31,13 @@ import com.callsblocker.ui.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CallLogScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearching by remember { mutableStateOf(false) }
     
     var hasPermission by remember {
         mutableStateOf(
@@ -39,6 +46,17 @@ fun CallLogScreen(viewModel: MainViewModel) {
                 Manifest.permission.READ_CALL_LOG
             ) == PackageManager.PERMISSION_GRANTED
         )
+    }
+
+    val filteredLogs = remember(uiState.systemCallLogs, searchQuery) {
+        if (searchQuery.isEmpty()) {
+            uiState.systemCallLogs
+        } else {
+            uiState.systemCallLogs.filter { 
+                it.phoneNumber.contains(searchQuery, ignoreCase = true) || 
+                it.displayName?.contains(searchQuery, ignoreCase = true) == true
+            }
+        }
     }
 
     val launcher = rememberLauncherForActivityResult(
@@ -56,42 +74,92 @@ fun CallLogScreen(viewModel: MainViewModel) {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        if (!hasPermission) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(R.string.permission_denied_log))
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { launcher.launch(Manifest.permission.READ_CALL_LOG) }) {
-                        Text(stringResource(R.string.request_permission))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    if (isSearching) {
+                        TextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("Cerca nel registro...") },
+                            singleLine = true,
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            )
+                        )
+                    } else {
+                        Text(stringResource(R.string.permission_read_call_log))
+                    }
+                },
+                navigationIcon = {
+                    if (isSearching) {
+                        IconButton(onClick = { 
+                            isSearching = false
+                            searchQuery = ""
+                        }) {
+                            Icon(Icons.Filled.ArrowBack, contentDescription = "Chiudi ricerca")
+                        }
+                    }
+                },
+                actions = {
+                    if (isSearching) {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { searchQuery = "" }) {
+                                Icon(Icons.Filled.Close, contentDescription = "Cancella")
+                            }
+                        }
+                    } else if (hasPermission && uiState.systemCallLogs.isNotEmpty()) {
+                        IconButton(onClick = { isSearching = true }) {
+                            Icon(Icons.Filled.Search, contentDescription = "Cerca")
+                        }
                     }
                 }
-            }
-        } else {
-            if (uiState.systemCallLogs.isEmpty()) {
+            )
+        }
+    ) { paddingValues ->
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            if (!hasPermission) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(stringResource(R.string.no_call_log))
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(stringResource(R.string.permission_denied_log))
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(onClick = { launcher.launch(Manifest.permission.READ_CALL_LOG) }) {
+                            Text(stringResource(R.string.request_permission))
+                        }
+                    }
                 }
             } else {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(uiState.systemCallLogs) { log ->
-                        CallLogItem(log) {
-                            viewModel.addEntry(
-                                BlockedEntry(
-                                    pattern = log.phoneNumber,
-                                    isPrefix = false,
-                                    label = log.displayName ?: "",
-                                    action = CallAction.BLOCK
+                if (filteredLogs.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(if (searchQuery.isEmpty()) stringResource(R.string.no_call_log) else "Nessun risultato trovato")
+                    }
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(filteredLogs) { log ->
+                            CallLogItem(log) {
+                                viewModel.addEntry(
+                                    BlockedEntry(
+                                        pattern = log.phoneNumber,
+                                        isPrefix = false,
+                                        label = log.displayName ?: "",
+                                        action = CallAction.BLOCK
+                                    )
                                 )
-                            )
+                            }
+                            HorizontalDivider()
                         }
-                        HorizontalDivider()
                     }
                 }
             }

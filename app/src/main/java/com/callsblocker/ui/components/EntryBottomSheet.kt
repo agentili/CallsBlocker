@@ -3,10 +3,10 @@ package com.callsblocker.ui.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -70,24 +70,20 @@ fun EntryBottomSheet(
             tonalElevation = 8.dp
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .imePadding()
             ) {
                 // Scrollable content with input fields
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .weight(1f, fill = false)
                         .verticalScroll(scrollState)
                         .padding(horizontal = 24.dp)
                         .padding(top = 16.dp)
-                        .imePadding()
                 ) {
-                    Text(
-                        text = if (entryToEdit == null) "Nuova voce blacklist" else "Modifica voce",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(bottom = 24.dp)
-                    )
-
                     // Pattern field
                     OutlinedTextField(
                         value = pattern,
@@ -167,17 +163,6 @@ fun EntryBottomSheet(
                             )
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Label field (optional)
-                    OutlinedTextField(
-                        value = label,
-                        onValueChange = { label = it },
-                        label = { Text("Nome o Etichetta (opzionale)") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium
-                    )
 
                     Spacer(modifier = Modifier.height(24.dp))
                 }

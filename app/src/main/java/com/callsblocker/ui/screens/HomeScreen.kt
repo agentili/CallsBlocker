@@ -232,7 +232,7 @@ fun HomeScreen(
                     showEntrySheet = true
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 4.dp) // Adjust padding to sit just above bottom bar
+                modifier = Modifier.padding(bottom = 80.dp)
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Aggiungi")
             }

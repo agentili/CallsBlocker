@@ -37,6 +37,31 @@ class CallBlockerService : CallScreeningService() {
             return
         }
 
+        // Check system spam identification (API 29+) using reflection to avoid classpath issues
+        var isSystemSpam = false
+        var callIdName: String? = null
+        var callIdDescription: String? = null
+        
+        try {
+            val getCallIdMethod = callDetails.javaClass.getMethod("getCallIdentification")
+            val callId = getCallIdMethod.invoke(callDetails)
+            if (callId != null) {
+                val getNuisanceMethod = callId.javaClass.getMethod("getNuisanceConfidence")
+                val getNameMethod = callId.javaClass.getMethod("getName")
+                val getDescriptionMethod = callId.javaClass.getMethod("getDescription")
+                
+                val confidence = getNuisanceMethod.invoke(callId) as Int
+                callIdName = getNameMethod.invoke(callId) as? String
+                callIdDescription = getDescriptionMethod.invoke(callId) as? String
+                
+                isSystemSpam = confidence >= 2 || // 2 = MEDIUM
+                        callIdName?.contains("spam", ignoreCase = true) == true ||
+                        callIdDescription?.contains("spam", ignoreCase = true) == true
+            }
+        } catch (e: Exception) {
+            // Fallback or ignore if not supported
+        }
+
         val entries = try {
             runBlocking { repository.getAllSync() }
         } catch (e: Exception) {
@@ -45,19 +70,34 @@ class CallBlockerService : CallScreeningService() {
 
         val match = entries.firstOrNull { NumberMatcher.matches(incomingNumber, it) }
 
-        // Log the call if it matches a blacklist entry
-        match?.let {
-            runBlocking {
-                repository.insertLog(
-                    BlockedCallLog(
-                        number = incomingNumber,
-                        timestamp = System.currentTimeMillis(),
-                        action = it.action,
-                        label = it.label
-                    )
-                )
+        // Determine action and logging
+        var logEntry: BlockedCallLog? = null
 
-                // Notify if enabled
+        if (match != null) {
+            logEntry = BlockedCallLog(
+                number = incomingNumber,
+                timestamp = System.currentTimeMillis(),
+                action = match.action,
+                label = match.label,
+                isSpam = isSystemSpam
+            )
+        } else if (isSystemSpam) {
+            // Auto-log system identified spam even if not in blacklist
+            logEntry = BlockedCallLog(
+                number = incomingNumber,
+                timestamp = System.currentTimeMillis(),
+                action = CallAction.ALLOW, // We don't block automatically yet, just log
+                label = callIdName ?: callIdDescription ?: "Sospetto Spam Sistema",
+                isSpam = true,
+                isAutoAdded = true
+            )
+        }
+
+        // Persist log and notify
+        logEntry?.let { log ->
+            runBlocking {
+                repository.insertLog(log)
+
                 val notificationsEnabled = try {
                     prefsManager.notificationsEnabled.first()
                 } catch (e: Exception) {
@@ -65,7 +105,8 @@ class CallBlockerService : CallScreeningService() {
                 }
 
                 if (notificationsEnabled) {
-                    notificationHelper.showBlockedNotification(incomingNumber, it.action, it.label)
+                    val label = log.label ?: if (log.isSpam) "Sospetto Spam" else ""
+                    notificationHelper.showBlockedNotification(incomingNumber, log.action, label)
                 }
             }
         }

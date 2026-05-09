@@ -77,33 +77,42 @@ class CallLogPickerActivity : ComponentActivity() {
     private fun loadRecentCalls(): List<CallLogEntry> {
         val calls = mutableListOf<CallLogEntry>()
         try {
+            val projection = arrayOf(
+                CallLog.Calls.NUMBER,
+                CallLog.Calls.CACHED_NAME,
+                CallLog.Calls.DURATION,
+                CallLog.Calls.DATE
+            )
+
             val cursor = contentResolver.query(
                 CallLog.Calls.CONTENT_URI,
-                arrayOf(
-                    CallLog.Calls.NUMBER,
-                    CallLog.Calls.CACHED_NAME,
-                    CallLog.Calls.DURATION,
-                    CallLog.Calls.DATE
-                ),
+                projection,
                 null,
                 null,
-                "${CallLog.Calls.DATE} DESC LIMIT 50"
+                "${CallLog.Calls.DATE} DESC"
             )
 
             cursor?.use {
-                while (it.moveToNext()) {
-                    val number = it.getString(0)
-                    val name = it.getString(1)
-                    val duration = it.getLong(2)
-                    val date = it.getLong(3)
+                val numberIdx = it.getColumnIndex(CallLog.Calls.NUMBER)
+                val nameIdx = it.getColumnIndex(CallLog.Calls.CACHED_NAME)
+                val durationIdx = it.getColumnIndex(CallLog.Calls.DURATION)
+                val dateIdx = it.getColumnIndex(CallLog.Calls.DATE)
 
-                    if (number != null) {
+                var count = 0
+                while (it.moveToNext() && count < 100) {
+                    val number = if (numberIdx != -1) it.getString(numberIdx) else null
+                    val name = if (nameIdx != -1) it.getString(nameIdx) else null
+                    val duration = if (durationIdx != -1) it.getLong(durationIdx) else 0L
+                    val date = if (dateIdx != -1) it.getLong(dateIdx) else 0L
+
+                    if (!number.isNullOrEmpty()) {
                         calls.add(CallLogEntry(number, name, duration, date))
+                        count++
                     }
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            android.util.Log.e("CallLogPicker", "Error loading call logs", e)
         }
         return calls
     }

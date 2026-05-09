@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
@@ -157,6 +159,17 @@ fun BlockedCallsScreen(
                             val clip = ClipData.newPlainText("Phone Number", log.number)
                             clipboard.setPrimaryClip(clip)
                             Toast.makeText(context, "Numero copiato", Toast.LENGTH_SHORT).show()
+                        },
+                        onAdd = {
+                            viewModel.addEntry(
+                                com.callsblocker.data.BlockedEntry(
+                                    pattern = log.number,
+                                    isPrefix = false,
+                                    label = log.label ?: "Importato da Registro",
+                                    action = com.callsblocker.data.CallAction.BLOCK
+                                )
+                            )
+                            Toast.makeText(context, "Aggiunto alla blacklist", Toast.LENGTH_SHORT).show()
                         }
                     )
                 }
@@ -168,7 +181,8 @@ fun BlockedCallsScreen(
 @Composable
 fun CallLogItem(
     log: BlockedCallLog,
-    onCopy: () -> Unit
+    onCopy: () -> Unit,
+    onAdd: () -> Unit
 ) {
     val dateFormat = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
     val dateStr = dateFormat.format(Date(log.timestamp))
@@ -176,16 +190,20 @@ fun CallLogItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .padding(horizontal = 12.dp, vertical = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            containerColor = if (log.isSpam) {
+                MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f)
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            }
         ),
         shape = MaterialTheme.shapes.medium
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
@@ -195,10 +213,10 @@ fun CallLogItem(
                         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     IconButton(
                         onClick = onCopy,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
@@ -207,31 +225,73 @@ fun CallLogItem(
                             modifier = Modifier.size(16.dp)
                         )
                     }
+                    if (log.isAutoAdded) {
+                        IconButton(
+                            onClick = onAdd,
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Block,
+                                contentDescription = "Aggiungi a blacklist",
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+                    if (log.isSpam) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.error
+                            ),
+                            shape = MaterialTheme.shapes.extraSmall
+                        ) {
+                            Text(
+                                text = "SPAM",
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onError
+                            )
+                        }
+                    }
                 }
                 if (!log.label.isNullOrEmpty()) {
                     Text(
                         text = log.label,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
+                        color = if (log.isSpam) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
                     )
                 }
-                Text(
-                    text = dateStr,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = dateStr,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    if (log.isAutoAdded) {
+                        Text(
+                            text = " • Auto-rilevato",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        )
+                    }
+                }
             }
 
-            val actionColor = when (log.action) {
-                CallAction.BLOCK -> MaterialTheme.colorScheme.error
-                CallAction.SILENCE -> Color(0xFFFF9800)
-                CallAction.ALLOW -> Color(0xFF4CAF50)
+            val actionColor = when {
+                log.isSpam && log.action == CallAction.ALLOW -> MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                log.action == CallAction.BLOCK -> MaterialTheme.colorScheme.error
+                log.action == CallAction.SILENCE -> Color(0xFFFF9800)
+                log.action == CallAction.ALLOW -> Color(0xFF4CAF50)
+                else -> MaterialTheme.colorScheme.onSurfaceVariant
             }
 
-            val actionText = when (log.action) {
-                CallAction.BLOCK -> "Bloccata"
-                CallAction.SILENCE -> "Silenziata"
-                CallAction.ALLOW -> "Consentita"
+            val actionText = when {
+                log.isSpam && log.action == CallAction.ALLOW -> "Non Bloccata"
+                log.action == CallAction.BLOCK -> "Bloccata"
+                log.action == CallAction.SILENCE -> "Silenziata"
+                log.action == CallAction.ALLOW -> "Consentita"
+                else -> ""
             }
 
             Text(

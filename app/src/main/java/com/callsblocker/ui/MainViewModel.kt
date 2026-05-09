@@ -134,36 +134,47 @@ class MainViewModel @Inject constructor(
     }
 
     fun fetchSystemCallLogs() {
-        viewModelScope.launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             val calls = mutableListOf<CallLogEntry>()
             try {
+                val projection = arrayOf(
+                    android.provider.CallLog.Calls.NUMBER,
+                    android.provider.CallLog.Calls.CACHED_NAME,
+                    android.provider.CallLog.Calls.DURATION,
+                    android.provider.CallLog.Calls.DATE
+                )
+
+                // Some devices don't support LIMIT in the sort order string and return empty/fail.
+                // We'll fetch without LIMIT and take the first 100 manually.
                 val cursor = context.contentResolver.query(
                     android.provider.CallLog.Calls.CONTENT_URI,
-                    arrayOf(
-                        android.provider.CallLog.Calls.NUMBER,
-                        android.provider.CallLog.Calls.CACHED_NAME,
-                        android.provider.CallLog.Calls.DURATION,
-                        android.provider.CallLog.Calls.DATE
-                    ),
+                    projection,
                     null,
                     null,
-                    "${android.provider.CallLog.Calls.DATE} DESC LIMIT 50"
+                    "${android.provider.CallLog.Calls.DATE} DESC"
                 )
 
                 cursor?.use {
-                    while (it.moveToNext()) {
-                        val number = it.getString(0)
-                        val name = it.getString(1)
-                        val duration = it.getLong(2)
-                        val date = it.getLong(3)
+                    val numberIdx = it.getColumnIndex(android.provider.CallLog.Calls.NUMBER)
+                    val nameIdx = it.getColumnIndex(android.provider.CallLog.Calls.CACHED_NAME)
+                    val durationIdx = it.getColumnIndex(android.provider.CallLog.Calls.DURATION)
+                    val dateIdx = it.getColumnIndex(android.provider.CallLog.Calls.DATE)
 
-                        if (number != null) {
+                    var count = 0
+                    while (it.moveToNext() && count < 100) {
+                        val number = if (numberIdx != -1) it.getString(numberIdx) else null
+                        val name = if (nameIdx != -1) it.getString(nameIdx) else null
+                        val duration = if (durationIdx != -1) it.getLong(durationIdx) else 0L
+                        val date = if (dateIdx != -1) it.getLong(dateIdx) else 0L
+
+                        if (!number.isNullOrEmpty()) {
                             calls.add(CallLogEntry(number, name, duration, date))
+                            count++
                         }
                     }
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                android.util.Log.e("MainViewModel", "Error fetching call logs", e)
             }
             _uiState.value = _uiState.value.copy(systemCallLogs = calls)
         }

@@ -5,6 +5,9 @@ import com.callsblocker.data.CallAction
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object CsvManager {
 
@@ -20,6 +23,10 @@ object CsvManager {
                 it.write(line)
                 it.newLine()
             }
+            // Append date YYYYMMDD
+            val dateStr = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+            it.write(dateStr)
+            it.newLine()
         }
     }
 

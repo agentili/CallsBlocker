@@ -10,5 +10,7 @@ data class BlockedCallLog(
     val number: String,
     val timestamp: Long,
     val action: CallAction,
-    val label: String? = null
+    val label: String? = null,
+    val isSpam: Boolean = false,
+    val isAutoAdded: Boolean = false
 )

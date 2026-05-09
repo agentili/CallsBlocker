@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 
-@Database(entities = [BlockedEntry::class, BlockedCallLog::class], version = 2)
+@Database(entities = [BlockedEntry::class, BlockedCallLog::class], version = 3)
 @androidx.room.TypeConverters(CallActionConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun blockedEntryDao(): BlockedEntryDao

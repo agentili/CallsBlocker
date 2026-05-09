@@ -27,7 +27,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.callsblocker.R
 import com.callsblocker.data.BlockedEntry
 import com.callsblocker.data.CallAction
@@ -65,8 +69,9 @@ fun CallLogScreen(viewModel: MainViewModel) {
     }
 
     val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isGranted = permissions[Manifest.permission.READ_CALL_LOG] == true
         hasPermission = isGranted
         if (isGranted) {
             viewModel.fetchSystemCallLogs()
@@ -76,6 +81,22 @@ fun CallLogScreen(viewModel: MainViewModel) {
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
             viewModel.fetchSystemCallLogs()
+        }
+    }
+
+    // Refresh when screen becomes visible again
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                if (hasPermission) {
+                    viewModel.fetchSystemCallLogs()
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
@@ -140,7 +161,14 @@ fun CallLogScreen(viewModel: MainViewModel) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(stringResource(R.string.permission_denied_log))
                         Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { launcher.launch(Manifest.permission.READ_CALL_LOG) }) {
+                        Button(onClick = { 
+                            launcher.launch(
+                                arrayOf(
+                                    Manifest.permission.READ_CALL_LOG,
+                                    Manifest.permission.READ_CONTACTS
+                                )
+                            ) 
+                        }) {
                             Text(stringResource(R.string.request_permission))
                         }
                     }
@@ -192,25 +220,46 @@ fun CallLogItem(
     onCopy: () -> Unit
 ) {
     val sdf = remember { SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault()) }
+    val displayName = log.displayName?.takeIf { it.isNotBlank() }
     
     ListItem(
+        modifier = Modifier.heightIn(max = 64.dp),
         headlineContent = { 
             Text(
-                text = log.displayName ?: log.phoneNumber,
-                fontWeight = FontWeight.Bold
+                text = displayName ?: log.phoneNumber,
+                fontWeight = FontWeight.Bold,
+                fontSize = 19.sp,
+                style = MaterialTheme.typography.bodyLarge
             )
         },
         supportingContent = {
-            Column {
-                if (log.displayName != null) Text(log.phoneNumber)
-                Text(sdf.format(Date(log.date)))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (displayName != null) {
+                    Text(
+                        text = log.phoneNumber,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = " • ",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+                Text(
+                    text = sdf.format(Date(log.date)),
+                    fontSize = 12.sp,
+                    style = MaterialTheme.typography.labelSmall
+                )
             }
         },
         leadingContent = {
             Icon(
                 imageVector = Icons.Default.Call,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
             )
         },
         trailingContent = {
@@ -219,14 +268,16 @@ fun CallLogItem(
                     Icon(
                         imageVector = Icons.Default.ContentCopy,
                         contentDescription = "Copia numero",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
                 IconButton(onClick = onImport) {
                     Icon(
                         imageVector = Icons.Default.Block,
                         contentDescription = stringResource(R.string.import_from_log),
-                        tint = MaterialTheme.colorScheme.error
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }

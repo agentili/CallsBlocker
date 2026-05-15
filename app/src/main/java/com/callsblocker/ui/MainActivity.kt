@@ -130,7 +130,8 @@ class MainActivity : AppCompatActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "home"
+                        startDestination = "home",
+                        modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("home") {
                             HomeScreen(

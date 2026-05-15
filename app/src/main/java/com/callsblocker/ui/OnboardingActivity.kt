@@ -95,11 +95,9 @@ private fun OnboardingContent(
     batteryManager: BatteryOptimizationManager,
     onCompleted: () -> Unit
 ) {
-    val context = LocalContext.current
-
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { granted ->
+    ) {
         // Proceed to next step regardless
         viewModel.nextStep()
     }

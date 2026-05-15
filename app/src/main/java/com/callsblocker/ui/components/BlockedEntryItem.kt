@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.callsblocker.R
 import com.callsblocker.data.BlockedEntry
 import com.callsblocker.data.CallAction
 
@@ -84,7 +86,7 @@ fun BlockedEntryItem(
                         }
                         if (entry.isPrefix) {
                             Text(
-                                text = "Inizia con",
+                                text = stringResource(R.string.starts_with),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -94,9 +96,9 @@ fun BlockedEntryItem(
             }
 
             val (chipColor, chipLabel) = when (entry.action) {
-                CallAction.BLOCK -> MaterialTheme.colorScheme.error to "BLOCCA"
-                CallAction.SILENCE -> Color(0xFFFF9800) to "SILENZIA"
-                CallAction.ALLOW -> Color(0xFF4CAF50) to "CONSENTI"
+                CallAction.BLOCK -> MaterialTheme.colorScheme.error to stringResource(R.string.block).uppercase()
+                CallAction.SILENCE -> Color(0xFFFF9800) to stringResource(R.string.silence).uppercase()
+                CallAction.ALLOW -> Color(0xFF4CAF50) to stringResource(R.string.allow).uppercase()
             }
 
             SuggestionChip(
@@ -134,7 +136,7 @@ fun BlockedEntryItem(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
-                    contentDescription = "Modifica",
+                    contentDescription = stringResource(R.string.edit),
                     tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
                 )
             }
@@ -144,7 +146,7 @@ fun BlockedEntryItem(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
-                    contentDescription = "Elimina",
+                    contentDescription = stringResource(R.string.delete),
                     tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                 )
             }

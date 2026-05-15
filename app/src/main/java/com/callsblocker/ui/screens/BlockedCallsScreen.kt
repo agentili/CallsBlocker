@@ -47,6 +47,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.compose.ui.res.stringResource
+import com.callsblocker.R
 import com.callsblocker.data.BlockedCallLog
 import com.callsblocker.data.CallAction
 import com.callsblocker.ui.MainViewModel
@@ -85,7 +87,7 @@ fun BlockedCallsScreen(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("Cerca numero o nome...") },
+                            placeholder = { Text(stringResource(R.string.search_placeholder)) },
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = Color.Transparent,
@@ -96,7 +98,7 @@ fun BlockedCallsScreen(
                             )
                         )
                     } else {
-                        Text("Chiamate Intercettate")
+                        Text(stringResource(R.string.intercepted_calls))
                     }
                 },
                 navigationIcon = {
@@ -108,23 +110,23 @@ fun BlockedCallsScreen(
                             navController.popBackStack() 
                         }
                     }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Indietro")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
                     if (isSearching) {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { searchQuery = "" }) {
-                                Icon(Icons.Filled.Close, contentDescription = "Cancella")
+                                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.clear))
                             }
                         }
                     } else {
                         IconButton(onClick = { isSearching = true }) {
-                            Icon(Icons.Filled.Search, contentDescription = "Cerca")
+                            Icon(Icons.Filled.Search, contentDescription = stringResource(R.string.search))
                         }
                         if (uiState.callLogs.isNotEmpty()) {
                             IconButton(onClick = { viewModel.clearCallLogs() }) {
-                                Icon(Icons.Filled.Delete, contentDescription = "Cancella tutto")
+                                Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.clear_all))
                             }
                         }
                     }
@@ -140,7 +142,7 @@ fun BlockedCallsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (searchQuery.isEmpty()) "Nessuna chiamata intercettata" else "Nessun risultato trovato",
+                    text = if (searchQuery.isEmpty()) stringResource(R.string.no_intercepted) else stringResource(R.string.no_results),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -158,18 +160,18 @@ fun BlockedCallsScreen(
                             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                             val clip = ClipData.newPlainText("Phone Number", log.number)
                             clipboard.setPrimaryClip(clip)
-                            Toast.makeText(context, "Numero copiato", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.number_copied), Toast.LENGTH_SHORT).show()
                         },
                         onAdd = {
                             viewModel.addEntry(
                                 com.callsblocker.data.BlockedEntry(
                                     pattern = log.number,
                                     isPrefix = false,
-                                    label = log.label ?: "Importato da Registro",
+                                    label = log.label ?: context.getString(R.string.import_from_log),
                                     action = com.callsblocker.data.CallAction.BLOCK
                                 )
                             )
-                            Toast.makeText(context, "Aggiunto alla blacklist", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.added_to_blacklist), Toast.LENGTH_SHORT).show()
                         }
                     )
                 }
@@ -220,7 +222,7 @@ fun CallLogItem(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copia numero",
+                            contentDescription = stringResource(R.string.copy_number),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(16.dp)
                         )
@@ -232,7 +234,7 @@ fun CallLogItem(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Block,
-                                contentDescription = "Aggiungi a blacklist",
+                                contentDescription = stringResource(R.string.add_to_blacklist),
                                 tint = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.size(18.dp)
                             )
@@ -270,7 +272,7 @@ fun CallLogItem(
                     )
                     if (log.isAutoAdded) {
                         Text(
-                            text = " • Auto-rilevato",
+                            text = " • ${stringResource(R.string.auto_detected)}",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                         )
@@ -287,10 +289,10 @@ fun CallLogItem(
             }
 
             val actionText = when {
-                log.isSpam && log.action == CallAction.ALLOW -> "Non Bloccata"
-                log.action == CallAction.BLOCK -> "Bloccata"
-                log.action == CallAction.SILENCE -> "Silenziata"
-                log.action == CallAction.ALLOW -> "Consentita"
+                log.isSpam && log.action == CallAction.ALLOW -> stringResource(R.string.not_blocked)
+                log.action == CallAction.BLOCK -> stringResource(R.string.blocked)
+                log.action == CallAction.SILENCE -> stringResource(R.string.silenced)
+                log.action == CallAction.ALLOW -> stringResource(R.string.allowed)
                 else -> ""
             }
 

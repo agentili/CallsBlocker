@@ -32,6 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.stringResource
+import com.callsblocker.R
 import com.callsblocker.ui.theme.CallsBlockerTheme
 import com.callsblocker.util.AppRoleManager
 import com.callsblocker.util.BatteryOptimizationManager
@@ -135,13 +137,13 @@ private fun Step1Welcome(viewModel: OnboardingViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Benvenuto in CallsBlocker",
+            text = stringResource(R.string.welcome_title),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text = "Questa app ti aiuta a bloccare le chiamate indesiderate con una blacklist personalizzata.\n\nTocca avanti per iniziare la configurazione.",
+            text = stringResource(R.string.welcome_desc),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 32.dp)
@@ -150,7 +152,7 @@ private fun Step1Welcome(viewModel: OnboardingViewModel) {
             onClick = { viewModel.nextStep() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Avanti")
+            Text(stringResource(R.string.next))
         }
     }
 }
@@ -166,13 +168,13 @@ private fun Step2ReadCallLog(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Accesso al registro chiamate",
+            text = stringResource(R.string.permission_read_call_log),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text = "Per permetterti di aggiungere numeri dal registro delle chiamate recenti, abbiamo bisogno di accedere al tuo registro chiamate.",
+            text = stringResource(R.string.permission_read_call_log_desc),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 32.dp)
@@ -183,7 +185,7 @@ private fun Step2ReadCallLog(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Concedi accesso")
+            Text(stringResource(R.string.grant_access))
         }
     }
 }
@@ -201,13 +203,13 @@ private fun Step3ScreeningRole(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Impostazione come app di screening",
+            text = stringResource(R.string.set_as_screening_app),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text = "Per bloccare effettivamente le chiamate, devi impostare CallsBlocker come gestore schermata chiamate. Questo permetterà all'app di intercettare le chiamate in arrivo.",
+            text = stringResource(R.string.screening_role_desc),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 32.dp)
@@ -220,7 +222,7 @@ private fun Step3ScreeningRole(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Imposta come gestore")
+            Text(stringResource(R.string.set_as_manager))
         }
     }
 }
@@ -237,13 +239,13 @@ private fun Step4BatteryOptimization(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Esenzione da ottimizzazione batteria",
+            text = stringResource(R.string.battery_exemption_title),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text = "Alcuni dispositivi sospendono le app in background per risparmiare batteria. Per garantire che CallsBlocker continui a bloccare le chiamate, ti consigliamo di esentare l'app dall'ottimizzazione batteria.",
+            text = stringResource(R.string.battery_exemption_desc),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 32.dp)
@@ -258,7 +260,7 @@ private fun Step4BatteryOptimization(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Configura batteria")
+            Text(stringResource(R.string.configure_battery))
         }
         Button(
             onClick = { viewModel.nextStep() },
@@ -266,7 +268,7 @@ private fun Step4BatteryOptimization(
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-            Text("Salta")
+            Text(stringResource(R.string.skip))
         }
     }
 }
@@ -281,30 +283,30 @@ private fun Step5Features(viewModel: OnboardingViewModel) {
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
     ) {
         Text(
-            text = "Funzionalità Principali",
+            text = stringResource(R.string.main_features),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         
         FeatureItem(
-            title = "Aggiunta Rapida",
-            description = "Aggiungi numeri manualmente, importali dal registro chiamate o carica un file CSV."
+            title = stringResource(R.string.quick_add_title),
+            description = stringResource(R.string.quick_add_desc)
         )
         
         FeatureItem(
-            title = "Azioni Interattive",
-            description = "Clicca sul pulsante dell'azione (Blocca/Silenzia/Consenti) direttamente nella lista per cambiarla velocemente."
+            title = stringResource(R.string.interactive_actions_title),
+            description = stringResource(R.string.interactive_actions_desc)
         )
         
         FeatureItem(
-            title = "Ricerca Intelligente",
-            description = "Usa la barra di ricerca in alto per filtrare istantaneamente i numeri nella tua blacklist o nei log."
+            title = stringResource(R.string.smart_search_title),
+            description = stringResource(R.string.smart_search_desc)
         )
         
         FeatureItem(
-            title = "Protezione sicura",
-            description = "Conferma sempre l'eliminazione dei numeri per evitare cancellazioni accidentali."
+            title = stringResource(R.string.secure_protection_title),
+            description = stringResource(R.string.secure_protection_desc)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -313,7 +315,7 @@ private fun Step5Features(viewModel: OnboardingViewModel) {
             onClick = { viewModel.nextStep() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Ho capito")
+            Text(stringResource(R.string.understood))
         }
     }
 }
@@ -351,13 +353,13 @@ private fun Step6Completed(viewModel: OnboardingViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Configurazione completata!",
+            text = stringResource(R.string.setup_completed_title),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Text(
-            text = "CallsBlocker è ora pronto per bloccare le tue chiamate indesiderate. Puoi iniziare ad aggiungere numeri alla blacklist.",
+            text = stringResource(R.string.setup_completed_desc),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 32.dp)
@@ -366,7 +368,7 @@ private fun Step6Completed(viewModel: OnboardingViewModel) {
             onClick = { viewModel.completeOnboarding() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Accedi all'app")
+            Text(stringResource(R.string.enter_app))
         }
     }
 }

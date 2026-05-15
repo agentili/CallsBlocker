@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CallsBlocker</string>
+    <string name="protection_active">✓ Schutz aktiv</string>
+    <string name="protection_inactive">⚠ Schutz inaktiv — Zum Konfigurieren tippen</string>
+    <string name="battery_optimization_warning">⚠ Akku-Optimierung aktiv — könnte den Dienst blockieren</string>
+    <string name="settings">Einstellungen</string>
+    <string name="import_csv_txt">CSV oder TXT importieren</string>
+    <string name="export_csv_txt">CSV oder TXT exportieren</string>
+    <string name="info">Info</string>
+    <string name="add_entry">Eintrag hinzufügen</string>
+    <string name="pattern">Nummer (z. B. +393331234)</string>
+    <string name="exact_match">Genaue Übereinstimmung</string>
+    <string name="prefix_match">Präfix (Wildcard)</string>
+    <string name="label">Bezeichnung (optional)</string>
+    <string name="block">Blockieren</string>
+    <string name="silence">Stummschalten</string>
+    <string name="allow">Zulassen</string>
+    <string name="action">Aktion</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
+    <string name="delete">Löschen</string>
+    <string name="delete_confirmation_title">Löschen bestätigen</string>
+    <string name="delete_confirmation_message">Sind Sie sicher, dass Sie diese Nummer aus der Blacklist löschen möchten?</string>
+    <string name="empty_list">Keine Einträge in der Blacklist. Fügen Sie einen Eintrag hinzu, um zu beginnen.</string>
+    <string name="app_version">Version</string>
+    <string name="about">CallsBlocker — App zum Blockieren von Spam-Anrufen</string>
+    <string name="set_as_screening_app">Als Screening-App festlegen</string>
+    <string name="manage_battery_optimization">Akku-Optimierung verwalten</string>
+    <string name="permission_read_call_log">Zugriff auf Anrufliste</string>
+    <string name="permission_read_call_log_desc">Zugriff auf die Anrufliste erlauben, um Nummern aus dem Verlauf hinzuzufügen</string>
+    <string name="permission_denied_log">Zugriff auf Anrufliste verweigert</string>
+    <string name="request_permission">Berechtigung anfordern</string>
+    <string name="no_call_log">Keine Anrufliste gefunden</string>
+    <string name="import_from_log">Aus Anrufliste importieren</string>
+
+    <!-- Settings Screen -->
+    <string name="protection">Schutz</string>
+    <string name="screening_app_active">✓ App als Anruffilter-Manager festgelegt</string>
+    <string name="battery_not_optimized">✓ Akku nicht optimiert — der Dienst wird nicht beendet</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="notify_on_block">Benachrichtigen, wenn ein Anruf blockiert wird</string>
+    <string name="app_theme">App-Design</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="data_management">Datenverwaltung</string>
+    <string name="remove_all_numbers">Alle Nummern entfernen</string>
+    <string name="delete_all_confirmation">Sind Sie sicher, dass Sie alle Nummern aus der Blacklist entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="delete_all">Alles löschen</string>
+    <string name="back">Zurück</string>
+    <string name="language">Sprache</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_title">Willkommen bei CallsBlocker</string>
+    <string name="welcome_desc">Diese App hilft Ihnen, unerwünschte Anrufe mit einer personalisierten Blacklist zu blockieren.\n\nTippen Sie auf Weiter, um mit der Einrichtung zu beginnen.</string>
+    <string name="next">Weiter</string>
+    <string name="grant_access">Zugriff gewähren</string>
+    <string name="screening_role_desc">Um Anrufe effektiv zu blockieren, müssen Sie CallsBlocker als Ihren Anruffilter-Manager festlegen. Dies ermöglicht es der App, eingehende Anrufe abzufangen.</string>
+    <string name="set_as_manager">Als Manager festlegen</string>
+    <string name="battery_exemption_title">Ausnahme von der Akku-Optimierung</string>
+    <string name="battery_exemption_desc">Einige Geräte halten Hintergrund-Apps an, um Akku zu sparen. Um sicherzustellen, dass CallsBlocker weiterhin Anrufe blockiert, empfehlen wir, die App von der Akku-Optimierung auszunehmen.</string>
+    <string name="configure_battery">Akku konfigurieren</string>
+    <string name="skip">Überspringen</string>
+    <string name="main_features">Hauptmerkmale</string>
+    <string name="quick_add_title">Schnelles Hinzufügen</string>
+    <string name="quick_add_desc">Fügen Sie Nummern manuell hinzu, importieren Sie sie aus der Anrufliste oder laden Sie eine CSV-Datei hoch.</string>
+    <string name="interactive_actions_title">Interaktive Aktionen</string>
+    <string name="interactive_actions_desc">Klicken Sie direkt in der Liste auf die Aktionsschaltfläche (Blockieren/Stummschalten/Zulassen), um sie schnell zu ändern.</string>
+    <string name="smart_search_title">Intelligente Suche</string>
+    <string name="smart_search_desc">Verwenden Sie die Suchleiste oben, um Nummern in Ihrer Blacklist oder Ihren Protokollen sofort zu filtern.</string>
+    <string name="secure_protection_title">Sicherer Schutz</string>
+    <string name="secure_protection_desc">Bestätigen Sie immer das Löschen von Nummern, um versehentliches Entfernen zu vermeiden.</string>
+    <string name="understood">Verstanden</string>
+    <string name="setup_completed_title">Einrichtung abgeschlossen!</string>
+    <string name="setup_completed_desc">CallsBlocker ist jetzt bereit, Ihre unerwünschten Anrufe zu blockieren. Sie können damit beginnen, Nummern zur Blacklist hinzuzufügen.</string>
+    <string name="enter_app">App öffnen</string>
+
+    <!-- Navigation -->
+    <string name="blacklist">Blacklist</string>
+    <string name="history">Verlauf</string>
+    <string name="search_placeholder">Nummer oder Bezeichnung suchen…</string>
+    <string name="active">Aktiv</string>
+    <string name="close_search">Suche schließen</string>
+    <string name="clear">Löschen</string>
+    <string name="search">Suchen</string>
+    <string name="menu">Menü</string>
+    <string name="intercepted_calls">Abgefangene Anrufe</string>
+    <string name="no_entries">Keine Einträge in der Blacklist</string>
+    <string name="no_results">Keine Ergebnisse gefunden</string>
+    <string name="add">Hinzufügen</string>
+</resources>

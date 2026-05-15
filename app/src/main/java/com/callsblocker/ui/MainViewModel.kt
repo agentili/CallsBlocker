@@ -26,7 +26,8 @@ data class UiState(
     val isScreeningActive: Boolean = false,
     val isBatteryOptimized: Boolean = false,
     val userMessage: String? = null,
-    val appTheme: String = "system"
+    val appTheme: String = "system",
+    val appLanguage: String = "system"
 )
 
 @HiltViewModel
@@ -43,6 +44,7 @@ class MainViewModel @Inject constructor(
         observeEntries()
         observeLogs()
         observeTheme()
+        observeLanguage()
         updateScreeningStatus()
     }
 
@@ -66,6 +68,14 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             prefsManager.appTheme.collect { theme ->
                 _uiState.value = _uiState.value.copy(appTheme = theme)
+            }
+        }
+    }
+
+    private fun observeLanguage() {
+        viewModelScope.launch {
+            prefsManager.appLanguage.collect { language ->
+                _uiState.value = _uiState.value.copy(appLanguage = language)
             }
         }
     }
@@ -189,6 +199,12 @@ class MainViewModel @Inject constructor(
     fun setAppTheme(theme: String) {
         viewModelScope.launch {
             prefsManager.setAppTheme(theme)
+        }
+    }
+
+    fun setAppLanguage(language: String) {
+        viewModelScope.launch {
+            prefsManager.setAppLanguage(language)
         }
     }
 

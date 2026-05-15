@@ -109,7 +109,7 @@ fun CallLogScreen(viewModel: MainViewModel) {
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("Cerca nel registro...") },
+                            placeholder = { Text(stringResource(R.string.search_in_log)) },
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = Color.Transparent,
@@ -121,7 +121,7 @@ fun CallLogScreen(viewModel: MainViewModel) {
                         )
                     } else {
                         Text(
-                            "Registro Chiamate",
+                            stringResource(R.string.call_log_title),
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
@@ -132,7 +132,7 @@ fun CallLogScreen(viewModel: MainViewModel) {
                             isSearching = false
                             searchQuery = ""
                         }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Chiudi ricerca")
+                            Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.close_search))
                         }
                     }
                 },
@@ -140,12 +140,12 @@ fun CallLogScreen(viewModel: MainViewModel) {
                     if (isSearching) {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { searchQuery = "" }) {
-                                Icon(Icons.Filled.Close, contentDescription = "Cancella")
+                                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.clear))
                             }
                         }
                     } else if (hasPermission && uiState.systemCallLogs.isNotEmpty()) {
                         IconButton(onClick = { isSearching = true }) {
-                            Icon(Icons.Filled.Search, contentDescription = "Cerca")
+                            Icon(Icons.Filled.Search, contentDescription = stringResource(R.string.search))
                         }
                     }
                 }
@@ -179,7 +179,7 @@ fun CallLogScreen(viewModel: MainViewModel) {
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(if (searchQuery.isEmpty()) stringResource(R.string.no_call_log) else "Nessun risultato trovato")
+                        Text(if (searchQuery.isEmpty()) stringResource(R.string.no_call_log) else stringResource(R.string.no_results))
                     }
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -195,13 +195,13 @@ fun CallLogScreen(viewModel: MainViewModel) {
                                             action = CallAction.BLOCK
                                         )
                                     )
-                                    Toast.makeText(context, "Numero aggiunto alla blacklist", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.added_to_blacklist), Toast.LENGTH_SHORT).show()
                                 },
                                 onCopy = {
                                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("Phone Number", log.phoneNumber)
                                     clipboard.setPrimaryClip(clip)
-                                    Toast.makeText(context, "Numero copiato", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.number_copied), Toast.LENGTH_SHORT).show()
                                 }
                             )
                             HorizontalDivider()
@@ -267,7 +267,7 @@ fun CallLogItem(
                 IconButton(onClick = onCopy) {
                     Icon(
                         imageVector = Icons.Default.ContentCopy,
-                        contentDescription = "Copia numero",
+                        contentDescription = stringResource(R.string.copy_number),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )

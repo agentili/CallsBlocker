@@ -23,10 +23,6 @@ object CsvManager {
                 it.write(line)
                 it.newLine()
             }
-            // Append date YYYYMMDD
-            val dateStr = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
-            it.write(dateStr)
-            it.newLine()
         }
     }
 

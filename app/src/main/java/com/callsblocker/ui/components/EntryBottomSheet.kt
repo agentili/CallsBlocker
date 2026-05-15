@@ -1,5 +1,6 @@
 package com.callsblocker.ui.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.callsblocker.R
 import com.callsblocker.data.BlockedEntry
 import com.callsblocker.data.CallAction
 
@@ -40,6 +43,7 @@ fun EntryBottomSheet(
     entryToEdit: BlockedEntry? = null,
     showSheet: Boolean = true
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     var pattern by remember { mutableStateOf("") }
     var isPrefix by remember { mutableStateOf(false) }
     var selectedAction by remember { mutableStateOf(CallAction.SILENCE) }
@@ -89,10 +93,10 @@ fun EntryBottomSheet(
                         value = pattern,
                         onValueChange = { newValue ->
                             pattern = newValue
-                            patternError = validatePattern(newValue)
+                            patternError = validatePattern(context, newValue)
                         },
-                        label = { Text("Numero o prefisso") },
-                        placeholder = { Text("es. +39333123456") },
+                        label = { Text(stringResource(R.string.number_or_prefix)) },
+                        placeholder = { Text(stringResource(R.string.example_pattern)) },
                         isError = patternError.isNotEmpty(),
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium
@@ -115,11 +119,11 @@ fun EntryBottomSheet(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Tratta come prefisso",
+                                text = stringResource(R.string.treat_as_prefix),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
-                                text = "Blocca tutti i numeri che iniziano così",
+                                text = stringResource(R.string.treat_as_prefix_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -134,7 +138,7 @@ fun EntryBottomSheet(
 
                     // Action selection
                     Text(
-                        text = "Azione da intraprendere",
+                        text = stringResource(R.string.action_to_take),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -142,7 +146,7 @@ fun EntryBottomSheet(
                     SingleChoiceSegmentedButtonRow(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        val actions = CallAction.values()
+                        val actions = CallAction.entries.toTypedArray()
                         actions.forEachIndexed { index, action ->
                             SegmentedButton(
                                 selected = selectedAction == action,
@@ -154,9 +158,9 @@ fun EntryBottomSheet(
                                 label = {
                                     Text(
                                         when (action) {
-                                            CallAction.BLOCK -> "Blocca"
-                                            CallAction.SILENCE -> "Silenzia"
-                                            CallAction.ALLOW -> "Consenti"
+                                            CallAction.BLOCK -> stringResource(R.string.block)
+                                            CallAction.SILENCE -> stringResource(R.string.silence)
+                                            CallAction.ALLOW -> stringResource(R.string.allow)
                                         }
                                     )
                                 }
@@ -181,7 +185,7 @@ fun EntryBottomSheet(
                         modifier = Modifier.weight(1f),
                         shape = MaterialTheme.shapes.medium
                     ) {
-                        Text("Annulla")
+                        Text(stringResource(R.string.cancel))
                     }
                     Button(
                         onClick = {
@@ -205,7 +209,7 @@ fun EntryBottomSheet(
                         modifier = Modifier.weight(1f),
                         shape = MaterialTheme.shapes.medium
                     ) {
-                        Text(if (entryToEdit == null) "Aggiungi" else "Salva")
+                        Text(if (entryToEdit == null) stringResource(R.string.add) else stringResource(R.string.save))
                     }
                 }
             }
@@ -213,11 +217,11 @@ fun EntryBottomSheet(
     }
 }
 
-private fun validatePattern(pattern: String): String {
+private fun validatePattern(context: Context, pattern: String): String {
     return when {
         pattern.isEmpty() -> ""
-        pattern.length < 4 -> "Il numero deve avere almeno 4 caratteri"
-        !pattern.all { it.isDigit() || it == '+' } -> "Solo numeri e '+' sono permessi"
+        pattern.length < 4 -> context.getString(R.string.validate_too_short)
+        !pattern.all { it.isDigit() || it == '+' } -> context.getString(R.string.validate_invalid_chars)
         else -> ""
     }
 }

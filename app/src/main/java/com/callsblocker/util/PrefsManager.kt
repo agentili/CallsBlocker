@@ -23,6 +23,7 @@ class PrefsManager @Inject constructor(
         val ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         val APP_THEME = androidx.datastore.preferences.core.stringPreferencesKey("app_theme")
+        val APP_LANGUAGE = androidx.datastore.preferences.core.stringPreferencesKey("app_language")
     }
 
     val onboardingCompleted: Flow<Boolean> = context.dataStore.data.map { prefs ->
@@ -35,6 +36,10 @@ class PrefsManager @Inject constructor(
 
     val appTheme: Flow<String> = context.dataStore.data.map { prefs ->
         prefs[PrefsKeys.APP_THEME] ?: "system"
+    }
+
+    val appLanguage: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[PrefsKeys.APP_LANGUAGE] ?: "system"
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {
@@ -52,6 +57,12 @@ class PrefsManager @Inject constructor(
     suspend fun setAppTheme(theme: String) {
         context.dataStore.edit { prefs ->
             prefs[PrefsKeys.APP_THEME] = theme
+        }
+    }
+
+    suspend fun setAppLanguage(language: String) {
+        context.dataStore.edit { prefs ->
+            prefs[PrefsKeys.APP_LANGUAGE] = language
         }
     }
 }

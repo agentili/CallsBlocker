@@ -132,7 +132,7 @@ fun HomeScreen(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("Cerca numero o nome...") },
+                            placeholder = { Text(stringResource(R.string.search_placeholder)) },
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = Color.Transparent,
@@ -149,7 +149,7 @@ fun HomeScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Icon(
                                     imageVector = Icons.Filled.CheckCircle,
-                                    contentDescription = "Attivo",
+                                    contentDescription = stringResource(R.string.active),
                                     tint = Color(0xFF4CAF50),
                                     modifier = Modifier.padding(top = 2.dp)
                                 )
@@ -163,7 +163,7 @@ fun HomeScreen(
                             isSearching = false
                             searchQuery = ""
                         }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Chiudi ricerca")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.close_search))
                         }
                     }
                 },
@@ -171,50 +171,50 @@ fun HomeScreen(
                     if (isSearching) {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { searchQuery = "" }) {
-                                Icon(Icons.Filled.Close, contentDescription = "Cancella")
+                                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.clear))
                             }
                         }
                     } else {
                         IconButton(onClick = { isSearching = true }) {
-                            Icon(Icons.Filled.Search, contentDescription = "Cerca")
+                            Icon(Icons.Filled.Search, contentDescription = stringResource(R.string.search))
                         }
                         IconButton(onClick = { menuExpanded = true }) {
-                            Icon(Icons.Filled.MoreVert, contentDescription = "Menu")
+                            Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.menu))
                         }
                         DropdownMenu(
                             expanded = menuExpanded,
                             onDismissRequest = { menuExpanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Chiamate Intercettate") },
+                                text = { Text(stringResource(R.string.intercepted_calls)) },
                                 onClick = {
                                     menuExpanded = false
                                     navController.navigate("logs")
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Impostazioni") },
+                                text = { Text(stringResource(R.string.settings)) },
                                 onClick = {
                                     menuExpanded = false
                                     navController.navigate("settings")
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Importa CSV/TXT") },
+                                text = { Text(stringResource(R.string.import_csv_txt)) },
                                 onClick = {
                                     menuExpanded = false
                                     importLauncher.launch(arrayOf("text/csv", "text/plain", "*/*"))
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Esporta CSV/TXT") },
+                                text = { Text(stringResource(R.string.export_csv_txt)) },
                                 onClick = {
                                     menuExpanded = false
                                     exportLauncher.launch("callsblocker_export.csv")
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Info") },
+                                text = { Text(stringResource(R.string.info)) },
                                 onClick = {
                                     menuExpanded = false
                                     navController.navigate("info")
@@ -234,7 +234,7 @@ fun HomeScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 80.dp)
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Aggiungi")
+                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add))
             }
         }
     ) { paddingValues ->
@@ -263,7 +263,7 @@ fun HomeScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = if (searchQuery.isEmpty()) "Nessuna voce nella blacklist" else "Nessun risultato trovato",
+                                text = if (searchQuery.isEmpty()) stringResource(R.string.no_entries) else stringResource(R.string.no_results),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

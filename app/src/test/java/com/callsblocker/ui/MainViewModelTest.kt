@@ -50,6 +50,7 @@ class MainViewModelTest {
         doReturn(flowOf(emptyList<BlockedEntry>())).`when`(repository).getAll()
         doReturn(flowOf(emptyList<BlockedCallLog>())).`when`(repository).getAllLogs()
         doReturn(flowOf("system")).`when`(prefsManager).appTheme
+        doReturn(flowOf("system")).`when`(prefsManager).appLanguage
         
         viewModel = MainViewModel(repository, prefsManager, context)
     }
@@ -76,6 +77,7 @@ class MainViewModelTest {
         )
         doReturn(flowOf(listOf(entry))).`when`(repository).getAll()
         doReturn(flowOf("system")).`when`(prefsManager).appTheme
+        doReturn(flowOf("system")).`when`(prefsManager).appLanguage
 
         val newViewModel = MainViewModel(repository, prefsManager, context)
         val state = newViewModel.uiState.value
@@ -97,6 +99,7 @@ class MainViewModelTest {
         doReturn(flowOf(listOf(entry))).`when`(repository).getAll()
         doReturn(flowOf(emptyList<BlockedCallLog>())).`when`(repository).getAllLogs()
         doReturn(flowOf("system")).`when`(prefsManager).appTheme
+        doReturn(flowOf("system")).`when`(prefsManager).appLanguage
         val vm = MainViewModel(repository, prefsManager, context)
 
         // Act
@@ -112,6 +115,7 @@ class MainViewModelTest {
         doReturn(flowOf(emptyList<BlockedEntry>())).`when`(repository).getAll()
         doReturn(flowOf(emptyList<BlockedCallLog>())).`when`(repository).getAllLogs()
         doReturn(flowOf("system")).`when`(prefsManager).appTheme
+        doReturn(flowOf("system")).`when`(prefsManager).appLanguage
         val vm = MainViewModel(repository, prefsManager, context)
 
         vm.deleteCallLog(99L)
@@ -125,6 +129,7 @@ class MainViewModelTest {
         doReturn(flowOf(emptyList<BlockedEntry>())).`when`(repository).getAll()
         doReturn(flowOf(emptyList<BlockedCallLog>())).`when`(repository).getAllLogs()
         doReturn(flowOf("system")).`when`(prefsManager).appTheme
+        doReturn(flowOf("system")).`when`(prefsManager).appLanguage
         val vm = MainViewModel(repository, prefsManager, context)
 
         val csv = "pattern,isPrefix,label,action\n+39333123456,false,Test,BLOCK\n".toByteArray()
@@ -142,6 +147,7 @@ class MainViewModelTest {
         doReturn(flowOf(emptyList<BlockedEntry>())).`when`(repository).getAll()
         doReturn(flowOf(emptyList<BlockedCallLog>())).`when`(repository).getAllLogs()
         doReturn(flowOf("system")).`when`(prefsManager).appTheme
+        doReturn(flowOf("system")).`when`(prefsManager).appLanguage
         val vm = MainViewModel(repository, prefsManager, context)
 
         val csv = "pattern,isPrefix,label,action\n+39333,false,Test,BLOCK\n".toByteArray()

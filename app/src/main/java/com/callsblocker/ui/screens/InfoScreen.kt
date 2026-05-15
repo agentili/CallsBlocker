@@ -23,7 +23,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.compose.ui.res.stringResource
 import com.callsblocker.BuildConfig
+import com.callsblocker.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,12 +33,12 @@ fun InfoScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Info") },
+                title = { Text(stringResource(R.string.info)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Indietro"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }
@@ -73,12 +75,12 @@ fun InfoScreen(navController: NavController) {
             // Description
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Descrizione",
+                    text = stringResource(R.string.description),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "CallsBlocker è un'app per il blocco intelligente di chiamate in arrivo. Permette di creare una blacklist personalizzata con:\n\n• Blocco totale (rifiuta e manda occupato)\n• Silenzio (mette in muto senza rifiutare)\n• Whitelist (lascia passare)\n\nSupporta sia numeri esatti che prefissi wildcard per bloccare intere famiglie di numeri.",
+                    text = stringResource(R.string.full_description),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -89,12 +91,12 @@ fun InfoScreen(navController: NavController) {
             // Features
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Funzionalità",
+                    text = stringResource(R.string.features),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "✓ Blocco intelligente per numero o prefisso\n✓ Azioni configurabili per voce\n✓ Import/Export CSV e TXT\n✓ Interfaccia Material Design 3\n✓ Database locale con Room\n✓ Sincronizzazione istantanea",
+                    text = stringResource(R.string.features_list),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -105,12 +107,12 @@ fun InfoScreen(navController: NavController) {
             // Requirements
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Requisiti",
+                    text = stringResource(R.string.requirements),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "Android 10 (API 29) o superiore",
+                    text = stringResource(R.string.android_req),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -120,12 +122,12 @@ fun InfoScreen(navController: NavController) {
             // Permissions
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Autorizzazioni",
+                    text = stringResource(R.string.permissions),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "• Registro chiamate: leggi le chiamate recenti\n• Gestore schermata chiamate: intercetta le chiamate in arrivo\n• Esenzione batteria: previeni la sospensione del servizio",
+                    text = stringResource(R.string.permissions_list),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -145,7 +147,7 @@ fun InfoScreen(navController: NavController) {
                     fontStyle = FontStyle.Italic
                 )
                 Text(
-                    text = "Sviluppato con Kotlin e Jetpack Compose",
+                    text = stringResource(R.string.developed_with),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp)

@@ -3,6 +3,8 @@ package com.callsblocker.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,8 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -70,6 +74,16 @@ class MainActivity : ComponentActivity() {
             val viewModel = hiltViewModel<MainViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             
+            // Apply language preference
+            LaunchedEffect(uiState.appLanguage) {
+                val appLocale: LocaleListCompat = if (uiState.appLanguage == "system") {
+                    LocaleListCompat.getEmptyLocaleList()
+                } else {
+                    LocaleListCompat.forLanguageTags(uiState.appLanguage)
+                }
+                AppCompatDelegate.setApplicationLocales(appLocale)
+            }
+            
             CallsBlockerTheme(theme = uiState.appTheme) {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -82,7 +96,7 @@ class MainActivity : ComponentActivity() {
                             NavigationBar {
                                 NavigationBarItem(
                                     icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
-                                    label = { Text("Blacklist") },
+                                    label = { Text(androidx.compose.ui.res.stringResource(id = com.callsblocker.R.string.blacklist)) },
                                     selected = currentDestination?.hierarchy?.any { it.route == "home" } == true,
                                     onClick = {
                                         navController.navigate("home") {
@@ -96,7 +110,7 @@ class MainActivity : ComponentActivity() {
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.History, contentDescription = null) },
-                                    label = { Text("Registro") },
+                                    label = { Text(androidx.compose.ui.res.stringResource(id = com.callsblocker.R.string.history)) },
                                     selected = currentDestination?.hierarchy?.any { it.route == "call_log" } == true,
                                     onClick = {
                                         navController.navigate("call_log") {

@@ -40,7 +40,14 @@ import com.callsblocker.util.PrefsManager
 import kotlinx.coroutines.launch
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.stringResource
+import com.callsblocker.R
 import com.callsblocker.ui.MainViewModel
 import com.callsblocker.ui.components.SegmentedSelector
 
@@ -78,12 +85,12 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Impostazioni") },
+                title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Indietro"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }
@@ -111,7 +118,7 @@ fun SettingsScreen(
 
             // Screening Role Section
             Text(
-                text = "Protezione",
+                text = stringResource(R.string.protection),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
             )
@@ -127,11 +134,11 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text("Imposta come app di screening")
+                    Text(stringResource(R.string.set_as_screening_app))
                 }
             } else {
                 Text(
-                    text = "✓ App impostata come gestore schermata chiamate",
+                    text = stringResource(R.string.screening_app_active),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(16.dp)
@@ -154,20 +161,70 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text("Gestisci ottimizzazione batteria")
+                    Text(stringResource(R.string.manage_battery_optimization))
                 }
             } else {
                 Text(
-                    text = "✓ Batteria non ottimizzata — il servizio non verrà killato",
+                    text = stringResource(R.string.battery_not_optimized),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(16.dp)
                 )
             }
 
+            // Language Section
+            Text(
+                text = stringResource(R.string.language),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
+            )
+
+            var expanded by remember { mutableStateOf(false) }
+            val languages = listOf(
+                "system" to stringResource(R.string.theme_system),
+                "en" to "English",
+                "es" to "Español",
+                "fr" to "Français",
+                "de" to "Deutsch",
+                "it" to "Italiano"
+            )
+            val selectedLanguageName = languages.find { it.first == uiState.appLanguage }?.second ?: stringResource(R.string.theme_system)
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                OutlinedTextField(
+                    value = selectedLanguageName,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
+                        .fillMaxWidth()
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    languages.forEach { (code, name) ->
+                        DropdownMenuItem(
+                            text = { Text(name) },
+                            onClick = {
+                                viewModel.setAppLanguage(code)
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+
             // Notifications Section
             Text(
-                text = "Notifiche",
+                text = stringResource(R.string.notifications),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
             )
@@ -179,7 +236,7 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Notifica quando una chiamata viene bloccata",
+                    text = stringResource(R.string.notify_on_block),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f)
                 )
@@ -203,16 +260,20 @@ fun SettingsScreen(
 
             // Theme Selection Section
             Text(
-                text = "Tema App",
+                text = stringResource(R.string.app_theme),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
             )
 
-            val themeOptions = listOf("Sistema", "Chiaro", "Scuro")
+            val themeOptions = listOf(
+                stringResource(R.string.theme_system),
+                stringResource(R.string.theme_light),
+                stringResource(R.string.theme_dark)
+            )
             val currentThemeLabel = when (uiState.appTheme) {
-                "light" -> "Chiaro"
-                "dark" -> "Scuro"
-                else -> "Sistema"
+                "light" -> stringResource(R.string.theme_light)
+                "dark" -> stringResource(R.string.theme_dark)
+                else -> stringResource(R.string.theme_system)
             }
 
             SegmentedSelector(
@@ -220,8 +281,8 @@ fun SettingsScreen(
                 selectedOption = currentThemeLabel,
                 onOptionSelected = { label ->
                     val themeValue = when (label) {
-                        "Chiaro" -> "light"
-                        "Scuro" -> "dark"
+                        themeOptions[1] -> "light"
+                        themeOptions[2] -> "dark"
                         else -> "system"
                     }
                     viewModel.setAppTheme(themeValue)
@@ -231,7 +292,7 @@ fun SettingsScreen(
 
             // Data Management Section
             Text(
-                text = "Gestione Dati",
+                text = stringResource(R.string.data_management),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
@@ -246,7 +307,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text("Rimuovi tutti i numeri")
+                Text(stringResource(R.string.remove_all_numbers))
             }
         }
     }
@@ -254,8 +315,8 @@ fun SettingsScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Conferma eliminazione") },
-            text = { Text("Sei sicuro di voler rimuovere tutti i numeri dalla blacklist? Questa azione non può essere annullata.") },
+            title = { Text(stringResource(R.string.delete_confirmation_title)) },
+            text = { Text(stringResource(R.string.delete_all_confirmation)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -263,12 +324,12 @@ fun SettingsScreen(
                         showDeleteDialog = false
                     }
                 ) {
-                    Text("Elimina tutto", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.delete_all), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Annulla")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

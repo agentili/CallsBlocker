@@ -22,6 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+import androidx.compose.ui.res.stringResource
+import com.callsblocker.R
+
 @Composable
 fun StatusBanner(
     isScreeningActive: Boolean,
@@ -65,9 +68,9 @@ fun StatusBanner(
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = when {
-                        !isScreeningActive -> "Protezione disattivata"
-                        isBatteryOptimized -> "Ottimizzazione batteria attiva"
-                        else -> "Protezione attiva"
+                        !isScreeningActive -> stringResource(R.string.protection_disabled)
+                        isBatteryOptimized -> stringResource(R.string.battery_opt_active)
+                        else -> stringResource(R.string.protection_active)
                     },
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                     color = when {
@@ -79,9 +82,9 @@ fun StatusBanner(
             }
             
             val subtitle = when {
-                !isScreeningActive -> "Tocca per abilitare lo screening chiamate"
-                isBatteryOptimized -> "L'app potrebbe non funzionare correttamente in background"
-                else -> "Il blocco delle chiamate è funzionante"
+                !isScreeningActive -> stringResource(R.string.tap_to_enable_screening)
+                isBatteryOptimized -> stringResource(R.string.battery_warning_subtitle)
+                else -> stringResource(R.string.protection_working)
             }
             
             Text(

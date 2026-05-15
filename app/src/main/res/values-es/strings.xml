@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CallsBlocker</string>
+    <string name="protection_active">✓ Protección activa</string>
+    <string name="protection_inactive">⚠ Protección inactiva — Toca para configurar</string>
+    <string name="battery_optimization_warning">⚠ Optimización de batería activa — podría bloquear el servicio</string>
+    <string name="settings">Ajustes</string>
+    <string name="import_csv_txt">Importar CSV o TXT</string>
+    <string name="export_csv_txt">Exportar CSV o TXT</string>
+    <string name="info">Información</string>
+    <string name="add_entry">Añadir entrada</string>
+    <string name="pattern">Número (ej. +393331234)</string>
+    <string name="exact_match">Número exacto</string>
+    <string name="prefix_match">Prefijo (comodín)</string>
+    <string name="label">Etiqueta (opcional)</string>
+    <string name="block">Bloquear</string>
+    <string name="silence">Silenciar</string>
+    <string name="allow">Permitir</string>
+    <string name="action">Acción</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+    <string name="delete">Eliminar</string>
+    <string name="delete_confirmation_title">Confirmar eliminación</string>
+    <string name="delete_confirmation_message">¿Estás seguro de que quieres eliminar este número de la lista negra?</string>
+    <string name="empty_list">No hay entradas en la lista negra. Añade una para empezar.</string>
+    <string name="app_version">Versión</string>
+    <string name="about">CallsBlocker — Aplicación para bloquear llamadas de spam</string>
+    <string name="set_as_screening_app">Establecer como aplicación de filtrado</string>
+    <string name="manage_battery_optimization">Gestionar optimización de batería</string>
+    <string name="permission_read_call_log">Acceso al registro de llamadas</string>
+    <string name="permission_read_call_log_desc">Permitir el acceso al registro de llamadas para añadir números del historial</string>
+    <string name="permission_denied_log">Acceso al registro de llamadas denegado</string>
+    <string name="request_permission">Solicitar permiso</string>
+    <string name="no_call_log">No se encontró el registro de llamadas</string>
+    <string name="import_from_log">Importar desde el registro</string>
+
+    <!-- Settings Screen -->
+    <string name="protection">Protección</string>
+    <string name="screening_app_active">✓ Aplicación establecida como gestor de filtrado de llamadas</string>
+    <string name="battery_not_optimized">✓ Batería no optimizada — el servicio no se detendrá</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="notify_on_block">Notificar cuando se bloquee una llamada</string>
+    <string name="app_theme">Tema de la aplicación</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="data_management">Gestión de datos</string>
+    <string name="remove_all_numbers">Eliminar todos los números</string>
+    <string name="delete_all_confirmation">¿Estás seguro de que quieres eliminar todos los números de la lista negra? Esta acción no se puede deshacer.</string>
+    <string name="delete_all">Eliminar todo</string>
+    <string name="back">Atrás</string>
+    <string name="language">Idioma</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_title">Bienvenido a CallsBlocker</string>
+    <string name="welcome_desc">Esta aplicación te ayuda a bloquear llamadas no deseadas con una lista negra personalizada.\n\nToca siguiente para comenzar la configuración.</string>
+    <string name="next">Siguiente</string>
+    <string name="grant_access">Conceder acceso</string>
+    <string name="screening_role_desc">Para bloquear llamadas de manera efectiva, debes establecer CallsBlocker como tu gestor de filtrado de llamadas. Esto permite que la aplicación intercepte las llamadas entrantes.</string>
+    <string name="set_as_manager">Establecer como gestor</string>
+    <string name="battery_exemption_title">Exención de optimización de batería</string>
+    <string name="battery_exemption_desc">Algunos dispositivos suspenden las aplicaciones en segundo plano para ahorrar batería. Para garantizar que CallsBlocker continúe bloqueando llamadas, recomendamos eximir a la aplicación de la optimización de batería.</string>
+    <string name="configure_battery">Configurar batería</string>
+    <string name="skip">Omitir</string>
+    <string name="main_features">Funcionalidades principales</string>
+    <string name="quick_add_title">Añadido rápido</string>
+    <string name="quick_add_desc">Añade números manualmente, impórtalos del registro de llamadas o sube un archivo CSV.</string>
+    <string name="interactive_actions_title">Acciones interactivas</string>
+    <string name="interactive_actions_desc">Haz clic en el botón de acción (Bloquear/Silenciar/Permitir) directamente en la lista para cambiarlo rápidamente.</string>
+    <string name="smart_search_title">Búsqueda inteligente</string>
+    <string name="smart_search_desc">Usa la barra de búsqueda en la parte superior para filtrar instantáneamente los números en tu lista negra o registros.</string>
+    <string name="secure_protection_title">Protección segura</string>
+    <string name="secure_protection_desc">Confirma siempre la eliminación de números para evitar borrados accidentales.</string>
+    <string name="understood">Entendido</string>
+    <string name="setup_completed_title">¡Configuración completada!</string>
+    <string name="setup_completed_desc">CallsBlocker ya está listo para bloquear tus llamadas no deseadas. Puedes empezar a añadir números a la lista negra.</string>
+    <string name="enter_app">Acceder a la aplicación</string>
+
+    <!-- Navigation -->
+    <string name="blacklist">Lista negra</string>
+    <string name="history">Registro</string>
+    <string name="search_placeholder">Buscar número o etiqueta…</string>
+    <string name="active">Activo</string>
+    <string name="close_search">Cerrar búsqueda</string>
+    <string name="clear">Borrar</string>
+    <string name="search">Buscar</string>
+    <string name="menu">Menú</string>
+    <string name="intercepted_calls">Llamadas interceptadas</string>
+    <string name="no_entries">No hay entradas en la lista negra</string>
+    <string name="no_results">No se encontraron resultados</string>
+    <string name="add">Añadir</string>
+</resources>

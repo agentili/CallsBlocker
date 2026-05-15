@@ -125,4 +125,6 @@
     <string name="protection_working">Call blocking is working</string>
     <string name="starts_with">Starts with</string>
     <string name="edit">Edit</string>
+    <string name="select_from_log">Select from call log</string>
+    <string name="no_calls_in_log">No calls in log</string>
 </resources>

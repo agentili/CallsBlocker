@@ -125,4 +125,6 @@
     <string name="protection_working">Il blocco delle chiamate è funzionante</string>
     <string name="starts_with">Inizia con</string>
     <string name="edit">Modifica</string>
+    <string name="select_from_log">Seleziona da registro chiamate</string>
+    <string name="no_calls_in_log">Nessuna chiamata nel registro</string>
 </resources>

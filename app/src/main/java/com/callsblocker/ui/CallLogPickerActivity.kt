@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CallLog
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
@@ -37,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.callsblocker.R
 import com.callsblocker.ui.theme.CallsBlockerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,7 +50,7 @@ data class CallLogEntry(
 )
 
 @AndroidEntryPoint
-class CallLogPickerActivity : ComponentActivity() {
+class CallLogPickerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -148,7 +150,7 @@ private fun CallLogPickerScreen(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("Cerca nel registro...") },
+                            placeholder = { Text(stringResource(R.string.search_in_log)) },
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = Color.Transparent,
@@ -159,7 +161,7 @@ private fun CallLogPickerScreen(
                             )
                         )
                     } else {
-                        Text("Seleziona da registro chiamate")
+                        Text(stringResource(R.string.select_from_log))
                     }
                 },
                 navigationIcon = {
@@ -171,19 +173,19 @@ private fun CallLogPickerScreen(
                             onCancel()
                         }
                     }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Indietro")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
                     if (isSearching) {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { searchQuery = "" }) {
-                                Icon(Icons.Filled.Close, contentDescription = "Cancella")
+                                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.clear))
                             }
                         }
                     } else {
                         IconButton(onClick = { isSearching = true }) {
-                            Icon(Icons.Filled.Search, contentDescription = "Cerca")
+                            Icon(Icons.Filled.Search, contentDescription = stringResource(R.string.search))
                         }
                     }
                 }
@@ -200,7 +202,7 @@ private fun CallLogPickerScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = if (searchQuery.isEmpty()) "Nessuna chiamata nel registro" else "Nessun risultato trovato",
+                    text = if (searchQuery.isEmpty()) stringResource(R.string.no_calls_in_log) else stringResource(R.string.no_results),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

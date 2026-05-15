@@ -2,7 +2,7 @@ package com.callsblocker.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.activity.compose.setContent
@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var roleManager: AppRoleManager
@@ -81,7 +81,9 @@ class MainActivity : ComponentActivity() {
                 } else {
                     LocaleListCompat.forLanguageTags(uiState.appLanguage)
                 }
-                AppCompatDelegate.setApplicationLocales(appLocale)
+                if (AppCompatDelegate.getApplicationLocales() != appLocale) {
+                    AppCompatDelegate.setApplicationLocales(appLocale)
+                }
             }
             
             CallsBlockerTheme(theme = uiState.appTheme) {

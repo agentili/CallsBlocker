@@ -26,6 +26,8 @@ class OnboardingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(OnboardingUiState())
     val uiState: StateFlow<OnboardingUiState> = _uiState.asStateFlow()
 
+    val appLanguage = prefsManager.appLanguage
+
     fun nextStep() {
         val current = _uiState.value.currentStep
         if (current < 6) {

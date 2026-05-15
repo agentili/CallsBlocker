@@ -3,7 +3,9 @@ package com.callsblocker.ui
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -41,7 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OnboardingActivity : ComponentActivity() {
+class OnboardingActivity : AppCompatActivity() {
 
     @Inject
     lateinit var roleManager: AppRoleManager
@@ -56,6 +58,19 @@ class OnboardingActivity : ComponentActivity() {
             CallsBlockerTheme {
                 val viewModel = hiltViewModel<OnboardingViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
+
+                // Apply language preference (in case it was set before)
+                val appLanguage by viewModel.appLanguage.collectAsState(initial = "system")
+                LaunchedEffect(appLanguage) {
+                    val appLocale: LocaleListCompat = if (appLanguage == "system") {
+                        LocaleListCompat.getEmptyLocaleList()
+                    } else {
+                        LocaleListCompat.forLanguageTags(appLanguage)
+                    }
+                    if (AppCompatDelegate.getApplicationLocales() != appLocale) {
+                        AppCompatDelegate.setApplicationLocales(appLocale)
+                    }
+                }
 
                 OnboardingContent(
                     uiState = uiState,
